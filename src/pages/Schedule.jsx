@@ -74,7 +74,7 @@ const Schedule = () => {
       bgColor: 'rgba(236, 72, 153, 0.1)'
     },
     {
-      time: 'After Dinner',
+      time: 'After Lunch',
       category: 'Competition',
       title: 'MR AND MRS FRESHIE',
       icon: Crown,
@@ -82,7 +82,7 @@ const Schedule = () => {
       bgColor: 'rgba(234, 179, 8, 0.1)'
     },
     {
-      time: 'After Dinner',
+      time: 'After Lunch',
       category: 'Celebration',
       title: 'RETURN GIFT DISTRIBUTION',
       icon: Gift,

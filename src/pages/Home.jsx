@@ -9,6 +9,14 @@ const Home = () => {
 
   const features = [
     {
+      icon: Calendar,
+      title: 'Event Schedule',
+      description: 'View the complete timeline of party events',
+      link: '/schedule',
+      color: 'from-emerald-500 to-teal-500',
+      protected: false
+    },
+    {
       icon: Vote,
       title: 'Vote Now!',
       description: 'Cast your vote for Mr. & Ms. Freshie 2025',
@@ -121,7 +129,7 @@ const Home = () => {
             </p>
           </Motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8">
             {features.map((feature, index) => {
               const Icon = feature.icon;
               const canAccess = !feature.protected || user;

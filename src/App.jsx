@@ -9,6 +9,7 @@ import Voting from './pages/Voting'
 import MusicRequests from './pages/MusicRequests'
 import Results from './pages/Results'
 import AnonymousMessages from './pages/AnonymousMessages'
+import Schedule from './pages/Schedule'
 import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
                   <AnonymousMessages />
                 </ProtectedRoute>
               } />
+              <Route path="/schedule" element={<Schedule />} />
               <Route path="/results" element={<Results />} />
             </Routes>
           </main>

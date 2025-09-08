@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { Menu, X, Home, Vote, Music, BarChart3, MessageCircle, LogOut, User } from 'lucide-react';
+import { Menu, X, Home, Vote, Music, BarChart3, MessageCircle, LogOut, User, Calendar } from 'lucide-react';
 import { motion as Motion, AnimatePresence } from 'framer-motion';
 
 const Navbar = () => {
@@ -17,11 +17,12 @@ const Navbar = () => {
   };
 
   const navItems = [
-    { path: '/', icon: Home, label: 'Home' },
+    { path: '/', icon: Home, label: 'Home', protected: false },
+    { path: '/schedule', icon: Calendar, label: 'Schedule', protected: false },
     { path: '/voting', icon: Vote, label: 'Vote', protected: true },
     { path: '/music', icon: Music, label: 'Music', protected: true },
     { path: '/messages', icon: MessageCircle, label: 'Messages', protected: true },
-    { path: '/results', icon: BarChart3, label: 'Results' },
+    { path: '/results', icon: BarChart3, label: 'Results', protected: false }
   ];
 
   const isActive = (path) => location.pathname === path;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { PartyPopper, Vote, Music, MessageCircle, Calendar, MapPin } from 'lucide-react';
+import { PartyPopper, Vote, Music, MessageCircle, Calendar, MapPin, Gift } from 'lucide-react';
 import { motion as Motion } from 'framer-motion';
 
 const Home = () => {
@@ -16,15 +16,16 @@ const Home = () => {
       color: 'from-emerald-500 to-teal-500',
       protected: false
     },
-    // TODO: Temporarily hidden - will be enabled later
-    // {
-    //   icon: Vote,
-    //   title: 'Vote Now!',
-    //   description: 'Cast your vote for Mr. & Ms. Freshie 2025',
-    //   link: '/voting',
-    //   color: 'from-blue-500 to-purple-500',
-    //   protected: true
-    // },
+    {
+      icon: Vote,
+      title: 'Vote Now!',
+      description: 'Cast your vote for Mr. & Ms. Freshie 2025',
+      link: '',
+      color: 'from-blue-500 to-purple-500',
+      protected: true,
+      comingSoon: true,
+      comingSoonText: 'Available on Freshers Party Day!'
+    },
     {
       icon: Music,
       title: 'Request Songs',
@@ -33,15 +34,25 @@ const Home = () => {
       color: 'from-pink-500 to-red-500',
       protected: true
     },
-    // TODO: Temporarily hidden - will be enabled later
     // {
     //   icon: MessageCircle,
     //   title: 'Anonymous Messages',
     //   description: 'Send anonymous messages to fellow freshers',
-    //   link: '/messages',
+    //   link: '',
     //   color: 'from-orange-500 to-pink-500',
-    //   protected: true
-    // }
+    //   protected: true,
+    //   surprise: true,
+    //   surpriseText: 'Something Special Coming Soon... 🎉'
+    // },
+    {
+      icon: Gift,
+      title: 'Surprise',
+      link: '',
+      color: 'from-orange-500 to-pink-500',
+      protected: true,
+      surprise: true,
+      surpriseText: 'Something Special Coming Soon... 🎉'
+    }
   ];
 
   return (
@@ -141,7 +152,35 @@ const Home = () => {
                   <h3 className="text-xl font-bold text-slate-100 mb-3">{feature.title}</h3>
                   <p className="text-slate-300 mb-6">{feature.description}</p>
                   
-                  {canAccess ? (
+                  {feature.comingSoon ? (
+                    <div className="space-y-3">
+                      <div className="bg-yellow-900/30 border border-yellow-500/30 rounded-lg p-3 mb-4">
+                        <p className="text-yellow-300 text-sm font-medium">
+                          🗳️ {feature.comingSoonText}
+                        </p>
+                      </div>
+                      <button
+                        disabled
+                        className="w-full py-2 px-4 rounded-full font-semibold bg-slate-600 text-slate-400 cursor-not-allowed"
+                      >
+                        Coming Soon
+                      </button>
+                    </div>
+                  ) : feature.surprise ? (
+                    <div className="space-y-3">
+                      <div className="bg-purple-900/30 border border-purple-500/30 rounded-lg p-3 mb-4">
+                        <p className="text-purple-300 text-sm font-medium">
+                          {feature.surpriseText}
+                        </p>
+                      </div>
+                      <button
+                        disabled
+                        className="w-full py-2 px-4 rounded-full font-semibold bg-gradient-to-r from-purple-600 to-pink-600 text-white cursor-not-allowed opacity-75"
+                      >
+                        Surprise! 🎁
+                      </button>
+                    </div>
+                  ) : canAccess ? (
                     <Link
                       to={feature.link}
                       className="inline-block btn-primary"
@@ -164,7 +203,7 @@ const Home = () => {
       </section>
 
       {/* Call to Action */}
-      <section className="px-4 py-12 bg-gradient-to-r from-blue-600 to-purple-600">
+      {/* <section className="px-4 py-12 bg-gradient-to-r from-blue-600 to-purple-600">
         <div className="max-w-4xl mx-auto text-center text-white">
           <Motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -202,7 +241,7 @@ const Home = () => {
             )}
           </Motion.div>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 };

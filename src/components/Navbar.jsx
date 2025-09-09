@@ -33,7 +33,7 @@ const Navbar = () => {
     }
     
     // Default fallback
-    return "Freshers'25";
+    return "Genesis";
   };
 
   const handleLogout = () => {
@@ -163,7 +163,7 @@ const Navbar = () => {
       <nav className="hidden lg:flex fixed top-0 left-0 right-0 dark-navbar backdrop-blur-md z-50">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between w-full xl:px-6">
           <Link to="/" className="text-2xl font-bold gradient-text xl:text-3xl truncate max-w-md">
-            IIT Dharwad {currentEventName}
+            {currentEventName}
           </Link>
           
           <div className="flex items-center space-x-4 xl:space-x-8">

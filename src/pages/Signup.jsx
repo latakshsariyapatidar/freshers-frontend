@@ -377,7 +377,7 @@ const Signup = () => {
       
       if (result.success) {
         // Account verified successfully, navigate to dashboard
-        navigate('/dashboard');
+        navigate('/');
       } else {
         setError(result.error || 'Invalid OTP. Please try again.');
       }

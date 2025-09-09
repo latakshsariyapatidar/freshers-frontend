@@ -235,7 +235,7 @@ export const logout = () => {
   localStorage.removeItem('authToken');
   localStorage.removeItem('token');
   localStorage.removeItem('userData');
-  window.location.href = '/login';
+  window.location.href = '/';
 };
 
 // =============================================================================

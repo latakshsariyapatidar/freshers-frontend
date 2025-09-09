@@ -9,12 +9,10 @@
 
 import axios from 'axios';
 
-// Get API environment variables - Updated to use the correct API endpoint structure
+// API Configuration - Use proxy in development to avoid CORS issues
 const API_BASE_URL = import.meta.env.DEV 
-  ? '/api/v1/fresherParty'  // Use proxy in development
-  : import.meta.env.VITE_API_URL 
-    ? `${import.meta.env.VITE_API_URL}/v1/fresherParty`
-    : 'http://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com/api/v1/fresherParty';
+  ? '/api/v1/fresherParty'  // Use Vite proxy in development
+  : 'http://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com/api/v1/fresherParty'; // Direct URL in production
 
 // Create axios instance with default configuration
 const apiClient = axios.create({

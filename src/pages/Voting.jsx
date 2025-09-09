@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { votingService, createSocket } from '../services/api';
+import { getAllCandidates, castVote } from '../services/api';
 import { Trophy, Users, Heart, CheckCircle, AlertCircle } from 'lucide-react';
 import { motion as Motion } from 'framer-motion';
 
@@ -14,23 +14,44 @@ const Voting = () => {
     fetchParticipants();
     checkVotingStatus();
     
-    // Set up socket connection for real-time updates
-    const socket = createSocket();
-    
-    socket.on('participantsUpdated', (data) => {
-      setParticipants(data);
-    });
-
-    return () => socket.disconnect();
+    // Socket connection disabled for now to avoid CORS issues
+    // Can be re-enabled once backend CORS is properly configured
   }, []);
 
   const fetchParticipants = async () => {
     try {
-      const data = await votingService.getParticipants();
-      setParticipants(data);
+      setLoading(true);
+      setError('');
+      
+      // Fetch all candidates using the new unified endpoint
+      const result = await getAllCandidates();
+      
+      if (result.success) {
+        // Separate candidates by category based on the API response format
+        const maleCandidates = result.candidates.filter(candidate => 
+          candidate.category === 'Mr_Fresher' || candidate.category === 'Mr'
+        );
+        const femaleCandidates = result.candidates.filter(candidate => 
+          candidate.category === 'Miss_Fresher' || candidate.category === 'Miss'
+        );
+        
+        // Transform the data to match the expected format, mapping 'vote' to 'voteCount'
+        setParticipants({
+          male: maleCandidates.map(candidate => ({
+            ...candidate,
+            voteCount: candidate.vote || candidate.voteCount || 0
+          })),
+          female: femaleCandidates.map(candidate => ({
+            ...candidate,
+            voteCount: candidate.vote || candidate.voteCount || 0
+          }))
+        });
+      } else {
+        setError(result.error || 'Failed to load candidates');
+      }
     } catch (err) {
       console.error('Failed to load participants:', err);
-      setError('Failed to load participants');
+      setError('Failed to load participants. Please check your connection.');
     } finally {
       setLoading(false);
     }
@@ -38,15 +59,12 @@ const Voting = () => {
 
   const checkVotingStatus = async () => {
     try {
-      const maleVoted = await votingService.hasUserVoted('male');
-      const femaleVoted = await votingService.hasUserVoted('female');
-      
-      setVotedFor({
-        male: maleVoted.hasVoted ? maleVoted.participantId : null,
-        female: femaleVoted.hasVoted ? femaleVoted.participantId : null
-      });
-    } catch (error) {
-      console.error('Failed to check voting status:', error);
+      // Note: This endpoint might not exist on backend yet
+      // For now, we'll assume user hasn't voted
+      setVotedFor({ male: null, female: null });
+    } catch (err) {
+      console.log('Could not check voting status:', err);
+      // Continue without voting status
     }
   };
 
@@ -55,9 +73,17 @@ const Voting = () => {
 
     setIsVoting(true);
     try {
-      await votingService.vote(participantId, category);
-      setVotedFor({ ...votedFor, [category]: participantId });
-      await fetchParticipants(); // Refresh to get updated vote counts
+      // Use the new castVote API function
+      const result = await castVote(participantId);
+      
+      if (result.success) {
+        // Map backend categories to frontend categories
+        const frontendCategory = (category === 'Mr' || category === 'Mr_Fresher') ? 'male' : 'female';
+        setVotedFor({ ...votedFor, [frontendCategory]: participantId });
+        await fetchParticipants(); // Refresh to get updated vote counts
+      } else {
+        setError(result.error || 'Failed to vote. Please try again.');
+      }
     } catch (err) {
       console.error('Voting failed:', err);
       setError('Failed to vote. Please try again.');
@@ -67,8 +93,11 @@ const Voting = () => {
   };
 
   const ParticipantCard = ({ participant, category }) => {
-    const hasVoted = votedFor[category] === participant.id;
-    const canVote = !votedFor[category] && !isVoting;
+    // Map backend category to frontend category for UI state
+    // Handle both 'Mr'/'Miss' and 'Mr_Fresher'/'Miss_Fresher' formats
+    const frontendCategory = (category === 'Mr' || category === 'Mr_Fresher') ? 'male' : 'female';
+    const hasVoted = votedFor[frontendCategory] === participant._id;
+    const canVote = !votedFor[frontendCategory] && !isVoting;
 
     return (
       <Motion.div
@@ -82,35 +111,24 @@ const Voting = () => {
       >
         {hasVoted && (
           <div className="absolute -top-2 -right-2 z-10 bg-green-500 rounded-full p-1">
-            <CheckCircle className="h-6 w-6 text-white" />
+            <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
           </div>
         )}
         
-        <div className="aspect-square mb-4 rounded-xl overflow-hidden bg-slate-700">
-          <img
-            src={participant.photo || '/api/placeholder/300/300'}
-            alt={participant.name}
-            className="w-full h-full object-cover"
-            onError={(e) => {
-              e.target.src = '/api/placeholder/300/300';
-            }}
-          />
-        </div>
-        
-        <div className="text-center">
-          <h3 className="text-lg font-bold text-slate-100 mb-2">{participant.name}</h3>
-          <p className="text-slate-300 text-sm mb-2">{participant.department}</p>
-          <p className="text-slate-400 text-xs mb-4">Roll: {participant.rollNumber}</p>
+        <div className="text-center p-4 sm:p-6">
+          <h3 className="text-lg sm:text-xl font-bold text-slate-100 mb-2 sm:mb-3 line-clamp-2">{participant.name}</h3>
+          <p className="text-slate-300 text-sm sm:text-base mb-1 sm:mb-2 truncate">{participant.department}</p>
+          <p className="text-slate-400 text-xs sm:text-sm mb-4 sm:mb-6">Roll: {participant.rollNumber}</p>
           
-          <div className="flex items-center justify-center space-x-2 mb-4 text-sm text-slate-300">
-            <Heart className="h-4 w-4" />
-            <span>{participant.voteCount || 0} votes</span>
+          <div className="flex items-center justify-center space-x-2 mb-4 sm:mb-6 text-base sm:text-lg text-slate-200">
+            <Heart className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0" />
+            <span className="font-bold text-xl sm:text-2xl">{participant.voteCount || 0} votes</span>
           </div>
           
           <button
-            onClick={() => handleVote(participant.id, category)}
+            onClick={() => handleVote(participant._id, category)}
             disabled={!canVote}
-            className={`w-full py-2 px-4 rounded-full font-semibold transition-all ${
+            className={`w-full py-2 sm:py-3 px-3 sm:px-4 rounded-full font-semibold transition-all text-sm sm:text-base ${
               hasVoted
                 ? 'bg-green-600 text-white cursor-not-allowed'
                 : canVote
@@ -155,32 +173,32 @@ const Voting = () => {
   }
 
   return (
-    <div className="min-h-screen pt-20 lg:pt-24 px-4 py-8">
+    <div className="min-h-screen pt-16 sm:pt-20 lg:pt-24 px-3 py-6 sm:px-4 sm:py-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <Motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          className="text-center mb-8 sm:mb-12"
         >
-          <div className="flex justify-center mb-6">
-            <Trophy className="h-16 w-16 text-yellow-500 animate-bounce" />
+          <div className="flex justify-center mb-4 sm:mb-6">
+            <Trophy className="h-12 w-12 sm:h-16 sm:w-16 text-yellow-500 animate-bounce" />
           </div>
-          <h1 className="text-3xl lg:text-5xl font-bold gradient-text mb-4">
+          <h1 className="text-2xl sm:text-3xl lg:text-5xl font-bold gradient-text mb-3 sm:mb-4 px-2">
             Vote for Freshers' 2025
           </h1>
-          <p className="text-lg text-slate-300 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto px-4">
             Cast your vote for Mr. and Ms. Freshie! Choose wisely - you can vote once for each category.
           </p>
           
           {/* Voting Status */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
-            <div className={`px-4 py-2 rounded-full text-sm font-medium ${
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mt-4 sm:mt-6 px-4">
+            <div className={`px-3 py-2 sm:px-4 rounded-full text-xs sm:text-sm font-medium ${
               votedFor.male ? 'bg-green-900/30 text-green-300' : 'bg-slate-700 text-slate-300'
             }`}>
-              Mr. Freshie: {votedFor.male ? '✓ Voted' : 'Not voted yet'}
+              Mr. Fresher: {votedFor.male ? '✓ Voted' : 'Not voted yet'}
             </div>
-            <div className={`px-4 py-2 rounded-full text-sm font-medium ${
+            <div className={`px-3 py-2 sm:px-4 rounded-full text-xs sm:text-sm font-medium ${
               votedFor.female ? 'bg-green-900/30 text-green-300' : 'bg-slate-700 text-slate-300'
             }`}>
               Ms. Freshie: {votedFor.female ? '✓ Voted' : 'Not voted yet'}
@@ -193,27 +211,27 @@ const Voting = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="mb-16"
+          className="mb-12 sm:mb-16"
         >
-          <div className="flex items-center justify-center mb-8">
-            <Users className="h-8 w-8 text-blue-500 mr-3" />
-            <h2 className="text-2xl lg:text-3xl font-bold gradient-text">Mr. Freshie 2025</h2>
+          <div className="flex items-center justify-center mb-6 sm:mb-8 px-4">
+            <Users className="h-6 w-6 sm:h-8 sm:w-8 text-blue-500 mr-2 sm:mr-3 flex-shrink-0" />
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold gradient-text text-center">Mr. Fresher 2025</h2>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {participants.male.map((participant) => (
               <ParticipantCard
-                key={participant.id}
+                key={participant._id}
                 participant={participant}
-                category="male"
+                category={participant.category}
               />
             ))}
           </div>
           
           {participants.male.length === 0 && (
-            <div className="text-center py-12">
-              <Users className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-              <p className="text-slate-400">No male participants yet.</p>
+            <div className="text-center py-8 sm:py-12">
+              <Users className="h-10 w-10 sm:h-12 sm:w-12 text-slate-400 mx-auto mb-3 sm:mb-4" />
+              <p className="text-slate-400 text-sm sm:text-base">No male participants yet.</p>
             </div>
           )}
         </Motion.section>
@@ -232,9 +250,9 @@ const Voting = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {participants.female.map((participant) => (
               <ParticipantCard
-                key={participant.id}
+                key={participant._id}
                 participant={participant}
-                category="female"
+                category={participant.category}
               />
             ))}
           </div>

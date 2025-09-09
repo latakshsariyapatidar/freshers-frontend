@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { PartyPopper, Vote, Music, Trophy, MessageCircle, Calendar, MapPin } from 'lucide-react';
+import { PartyPopper, Vote, Music, MessageCircle, Calendar, MapPin } from 'lucide-react';
 import { motion as Motion } from 'framer-motion';
 
 const Home = () => {
@@ -16,14 +16,15 @@ const Home = () => {
       color: 'from-emerald-500 to-teal-500',
       protected: false
     },
-    {
-      icon: Vote,
-      title: 'Vote Now!',
-      description: 'Cast your vote for Mr. & Ms. Freshie 2025',
-      link: '/voting',
-      color: 'from-blue-500 to-purple-500',
-      protected: true
-    },
+    // TODO: Temporarily hidden - will be enabled later
+    // {
+    //   icon: Vote,
+    //   title: 'Vote Now!',
+    //   description: 'Cast your vote for Mr. & Ms. Freshie 2025',
+    //   link: '/voting',
+    //   color: 'from-blue-500 to-purple-500',
+    //   protected: true
+    // },
     {
       icon: Music,
       title: 'Request Songs',
@@ -32,55 +33,49 @@ const Home = () => {
       color: 'from-pink-500 to-red-500',
       protected: true
     },
-    {
-      icon: MessageCircle,
-      title: 'Anonymous Messages',
-      description: 'Send anonymous messages to fellow freshers',
-      link: '/messages',
-      color: 'from-orange-500 to-pink-500',
-      protected: true
-    },
-    {
-      icon: Trophy,
-      title: 'Live Results',
-      description: 'Check real-time voting results',
-      link: '/results',
-      color: 'from-yellow-500 to-orange-500'
-    }
+    // TODO: Temporarily hidden - will be enabled later
+    // {
+    //   icon: MessageCircle,
+    //   title: 'Anonymous Messages',
+    //   description: 'Send anonymous messages to fellow freshers',
+    //   link: '/messages',
+    //   color: 'from-orange-500 to-pink-500',
+    //   protected: true
+    // }
   ];
 
   return (
-    <div className="min-h-screen pt-20 lg:pt-24">
+    <div className="min-h-screen pt-16 sm:pt-20 lg:pt-24">
       {/* Hero Section */}
-      <section className="px-4 py-12 lg:py-20">
+      <section className="px-3 py-8 sm:px-4 sm:py-12 lg:py-20">
         <div className="max-w-6xl mx-auto text-center">
           <Motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="space-y-6"
+            className="space-y-4 sm:space-y-6"
           >
             <div className="flex justify-center">
-              <PartyPopper className="h-16 w-16 text-blue-500 animate-bounce" />
+              <PartyPopper className="h-12 w-12 sm:h-16 sm:w-16 text-blue-500 animate-bounce" />
             </div>
             
-            <h1 className="text-4xl lg:text-6xl font-bold gradient-text leading-tight">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold gradient-text leading-tight px-2">
               IIT Dharwad
               <br />
               <span className="text-pink-400">Freshers Party 2025</span>
             </h1>
             
-            <p className="text-lg lg:text-xl text-slate-300 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg lg:text-xl text-slate-300 max-w-2xl mx-auto px-4">
               Welcome to the most awaited event of the year! Join us for an unforgettable night 
               filled with fun, music, and competitions.
             </p>
 
             {!user && (
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
-                <Link to="/login" className="btn-primary">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mt-6 sm:mt-8 px-4">
+                <Link to="/login" className="btn-primary w-full sm:w-auto min-w-[160px] text-center">
                   Login to Participate
                 </Link>
-                <Link to="/signup" className="btn-secondary">
+                <Link to="/signup" className="btn-secondary w-full sm:w-auto min-w-[160px] text-center">
                   New? Sign Up Here
                 </Link>
               </div>
@@ -90,46 +85,41 @@ const Home = () => {
       </section>
 
       {/* Event Details */}
-      <section className="px-4 py-12 bg-slate-800/50 backdrop-blur-sm">
-        <div className="max-w-4xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-8">
-            <Motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="card text-center"
-            >
-              <Calendar className="h-12 w-12 text-blue-500 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-slate-100 mb-2">When</h3>
-              <p className="text-slate-300">
-                September 12 and September 13, 2025
-                <br />
-              </p>
-            </Motion.div>
-            
-            
-          </div>
+      <section className="px-3 py-8 sm:px-4 sm:py-12 bg-slate-800/50 backdrop-blur-sm">
+        <div className="max-w-2xl mx-auto flex items-center justify-center">
+          <Motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="card text-center p-6 sm:p-8 w-full max-w-md mx-auto"
+          >
+            <Calendar className="h-12 w-12 sm:h-16 sm:w-16 text-blue-500 mx-auto mb-4 sm:mb-6" />
+            <h3 className="text-xl sm:text-2xl font-bold text-slate-100 mb-3 sm:mb-4">When</h3>
+            <p className="text-slate-300 text-base sm:text-lg">
+              September 12 and September 13, 2025
+            </p>
+          </Motion.div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="px-4 py-12 lg:py-20">
+      <section className="px-3 py-8 sm:px-4 sm:py-12 lg:py-20">
         <div className="max-w-6xl mx-auto">
           <Motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-center mb-12"
+            className="text-center mb-8 sm:mb-12"
           >
-            <h2 className="text-3xl lg:text-4xl font-bold gradient-text mb-4">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold gradient-text mb-3 sm:mb-4 px-2">
               What You Can Do
             </h2>
-            <p className="text-slate-300 text-lg">
+            <p className="text-slate-300 text-base sm:text-lg px-4">
               Participate in the excitement and make your voice heard!
             </p>
           </Motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             {features.map((feature, index) => {
               const Icon = feature.icon;
               const canAccess = !feature.protected || user;

@@ -1,36 +1,64 @@
 import React, { useState, useEffect } from 'react';
-import { votingService, createSocket } from '../services/api';
-import { Trophy, Medal, Crown, Users, TrendingUp } from 'lucide-react';
+import { votingService } from '../services/api';
+import { Trophy, Medal, Crown, Users, TrendingUp, RefreshCw } from 'lucide-react';
 import { motion as Motion } from 'framer-motion';
 
 const Results = () => {
   const [results, setResults] = useState({ male: [], female: [] });
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [totalVotes, setTotalVotes] = useState({ male: 0, female: 0 });
+  const [lastUpdated, setLastUpdated] = useState(null);
 
+  // Auto-refresh every 30 seconds
   useEffect(() => {
     fetchResults();
     
-    // Set up socket connection for real-time updates
-    const socket = createSocket();
+    const interval = setInterval(() => {
+      refreshResults();
+    }, 30000); // Auto refresh every 30 seconds
     
-    socket.on('votesUpdated', (data) => {
-      setResults(data.results);
-      setTotalVotes(data.totalVotes);
-    });
-
-    return () => socket.disconnect();
+    return () => clearInterval(interval);
   }, []);
 
   const fetchResults = async () => {
     try {
       const data = await votingService.getResults();
-      setResults(data.results);
+      
+      // Transform the results array into the expected format
+      const transformedResults = {
+        male: data.results.filter(candidate => candidate.category === 'Mr').sort((a, b) => (b.voteCount || 0) - (a.voteCount || 0)),
+        female: data.results.filter(candidate => candidate.category === 'Miss').sort((a, b) => (b.voteCount || 0) - (a.voteCount || 0))
+      };
+      
+      setResults(transformedResults);
       setTotalVotes(data.totalVotes);
+      setLastUpdated(new Date());
     } catch (error) {
       console.error('Failed to fetch results:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const refreshResults = async () => {
+    setRefreshing(true);
+    try {
+      const data = await votingService.getResults();
+      
+      // Transform the results array into the expected format
+      const transformedResults = {
+        male: data.results.filter(candidate => candidate.category === 'Mr').sort((a, b) => (b.voteCount || 0) - (a.voteCount || 0)),
+        female: data.results.filter(candidate => candidate.category === 'Miss').sort((a, b) => (b.voteCount || 0) - (a.voteCount || 0))
+      };
+      
+      setResults(transformedResults);
+      setTotalVotes(data.totalVotes);
+      setLastUpdated(new Date());
+    } catch (error) {
+      console.error('Failed to refresh results:', error);
+    } finally {
+      setRefreshing(false);
     }
   };
 
@@ -163,9 +191,31 @@ const Results = () => {
           <h1 className="text-3xl lg:text-5xl font-bold gradient-text mb-4">
             Live Results
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Watch the competition unfold! Results are updated in real-time as votes pour in.
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-6">
+            Competition results updated automatically every 30 seconds. Click refresh for latest data.
           </p>
+          
+          {/* Refresh Controls */}
+          <div className="flex items-center justify-center space-x-4 mb-4">
+            <button
+              onClick={refreshResults}
+              disabled={refreshing}
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 ${
+                refreshing 
+                  ? 'bg-gray-100 text-gray-500 cursor-not-allowed' 
+                  : 'bg-blue-500 hover:bg-blue-600 text-white'
+              }`}
+            >
+              <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+              <span>{refreshing ? 'Refreshing...' : 'Refresh Results'}</span>
+            </button>
+          </div>
+          
+          {lastUpdated && (
+            <p className="text-sm text-gray-500">
+              Last updated: {lastUpdated.toLocaleTimeString()}
+            </p>
+          )}
         </Motion.div>
 
         {/* Stats Overview */}

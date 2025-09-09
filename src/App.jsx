@@ -5,12 +5,20 @@ import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
-import Voting from './pages/Voting'
+import Dashboard from './pages/Dashboard'
+import ApiTestPage from './pages/ApiTestPage'
+// TODO: Temporarily hidden - will be enabled later
+// import Voting from './pages/Voting'
 import MusicRequests from './pages/MusicRequests'
-import Results from './pages/Results'
-import AnonymousMessages from './pages/AnonymousMessages'
+// TODO: Temporarily hidden - will be enabled later
+// import AnonymousMessages from './pages/AnonymousMessages'
 import Schedule from './pages/Schedule'
 import ProtectedRoute from './components/ProtectedRoute'
+
+// Import debug test for signup
+if (import.meta.env.DEV) {
+  import('./debug/signupTest.js');
+}
 
 function App() {
   return (
@@ -23,23 +31,30 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
-              <Route path="/voting" element={
+              <Route path="/dashboard" element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/api-test" element={<ApiTestPage />} />
+              {/* TODO: Temporarily hidden - will be enabled later */}
+              {/* <Route path="/voting" element={
                 <ProtectedRoute>
                   <Voting />
                 </ProtectedRoute>
-              } />
+              } /> */}
               <Route path="/music" element={
                 <ProtectedRoute>
                   <MusicRequests />
                 </ProtectedRoute>
               } />
-              <Route path="/messages" element={
+              {/* TODO: Temporarily hidden - will be enabled later */}
+              {/* <Route path="/messages" element={
                 <ProtectedRoute>
                   <AnonymousMessages />
                 </ProtectedRoute>
-              } />
+              } /> */}
               <Route path="/schedule" element={<Schedule />} />
-              <Route path="/results" element={<Results />} />
             </Routes>
           </main>
         </div>

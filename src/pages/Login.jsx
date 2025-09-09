@@ -44,12 +44,12 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen pt-20 lg:pt-24 flex items-center justify-center px-4">
+    <div className="min-h-screen pt-16 sm:pt-20 lg:pt-24 flex items-center justify-center px-3 sm:px-4">
       <Motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="w-full max-w-md"
+        className="w-full max-w-sm sm:max-w-md"
       >
         <div className="card">
           <div className="text-center mb-8">

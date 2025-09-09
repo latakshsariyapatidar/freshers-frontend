@@ -5,11 +5,20 @@ export const useSocket = () => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const socketInstance = createSocket();
-    setSocket(socketInstance);
+    let socketInstance = null;
+    
+    createSocket().then(instance => {
+      socketInstance = instance;
+      setSocket(instance);
+    }).catch(error => {
+      console.log('Socket connection failed:', error);
+      setSocket(null);
+    });
 
     return () => {
-      socketInstance.disconnect();
+      if (socketInstance && socketInstance.disconnect) {
+        socketInstance.disconnect();
+      }
     };
   }, []);
 

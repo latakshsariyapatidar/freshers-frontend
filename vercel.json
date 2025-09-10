@@ -18,33 +18,5 @@
       "source": "/socket.io/(.*)",
       "destination": "http://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com:5000/socket.io/$1"
     }
-  ],
-  "headers": [
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
-        {
-          "key": "Access-Control-Allow-Methods",
-          "value": "GET, POST, PUT, DELETE, OPTIONS, PATCH"
-        },
-        {
-          "key": "Access-Control-Allow-Headers",
-          "value": "Content-Type, Authorization, X-Requested-With, Accept, Origin"
-        },
-        {
-          "key": "Access-Control-Max-Age",
-          "value": "86400"
-        }
-      ]
-    }
-  ],
-  "functions": {
-    "app/api/**": {
-      "includeFiles": "**"
-    }
-  }
+  ]
 }

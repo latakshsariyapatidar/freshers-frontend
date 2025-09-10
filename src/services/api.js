@@ -1,22 +1,26 @@
 /**
- * API Service Layer for Fresher Party Voting System
+ * API Service Layer for Fresher P    // Log outgoing requests
+    console.log('🚀 API Request:', {
+      method: config.method?.toUpperCase(),
+      url: config.url,
+      fullPath: `/api/v1/fresherParty${config.url}`,
+      data: config.data,
+      headers: { ...config.headers, Authorization: config.headers.Authorization ? '[HIDDEN]' : 'None' }
+    });ting System
  * 
  * This file contains all API endpoints and axios configurations
  * for the Fresher Party Voting System frontend application.
  * 
  * Configuration:
- * - Uses VITE_API_URL environment variable for base URL
- * - Automatically appends /v1/fresherParty to the base URL
- * - Fallback: https://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com/api
- * - Socket.IO uses VITE_SOCKET_URL environment variable
+ * - Uses relative paths: /api/v1/fresherParty
+ * - Vercel proxy handles routing to EC2 server
+ * - Socket.IO uses relative path: /
  */
 
 import axios from 'axios';
 
-// API Configuration - Use environment variable for base URL
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com/api';
-const API_VERSION_PATH = '/v1/fresherParty';
-const FULL_API_BASE_URL = `${API_BASE_URL}${API_VERSION_PATH}`;
+// API Configuration - Use relative paths for Vercel proxy
+const FULL_API_BASE_URL = '/api/v1/fresherParty';
 
 // Create axios instance with default configuration
 const apiClient = axios.create({
@@ -91,7 +95,7 @@ apiClient.interceptors.response.use(
         status,
         message: data?.message || 'Unknown error',
         url: error.config?.url,
-        fullUrl: `${FULL_API_BASE_URL}${error.config?.url || ''}`
+        fullPath: `/api/v1/fresherParty${error.config?.url || ''}`
       });
       
       // Return structured error object
@@ -579,9 +583,8 @@ export const createSocket = async () => {
     // Dynamically import socket.io-client to avoid build issues if not installed
     const { io } = await import('socket.io-client');
     
-    const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'https://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com';
-    
-    const socket = io(SOCKET_URL, {
+    // Use relative path for Socket.IO - Vercel will proxy to EC2
+    const socket = io('/', {
       transports: ['websocket', 'polling'],
       upgrade: true,
       rememberUpgrade: true,
@@ -593,7 +596,7 @@ export const createSocket = async () => {
       reconnectionDelay: 1000,
     });
 
-    console.log('🔌 Attempting to connect to Socket.IO server:', SOCKET_URL);
+    console.log('🔌 Attempting to connect to Socket.IO server via relative path');
     
     socket.on('connect', () => {
       console.log('✅ Socket.IO connected:', socket.id);

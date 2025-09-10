@@ -87,6 +87,16 @@ const Schedule = () => {
     },
     {
       day: 'September 12th',
+      time: '10:20 PM',
+      category: 'Open Stage',
+      title: 'Shayari by Khushi',
+      description: 'A beautiful collection of Shayari by Khushi',
+      icon: Spotlight,
+      color: '#06b6d4', // cyan-500
+      bgColor: 'rgba(6, 182, 212, 0.1)'
+    },
+    {
+      day: 'September 12th',
       time: '10:30 PM',
       category: 'Open Stage',
       title: 'Open Mic Invites',

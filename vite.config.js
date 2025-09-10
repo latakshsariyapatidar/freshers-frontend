@@ -7,11 +7,11 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     proxy: {
-      // Proxy all API requests to the backend server
+      // Proxy all API requests to the EC2 backend server
       '/api': {
-        target: 'http://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com',
+        target: 'https://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com',
         changeOrigin: true,
-        secure: false,
+        secure: false, // Set to false since you're using self-signed/invalid SSL cert
         configure: (proxy) => {
           proxy.on('error', (err) => {
             console.log('proxy error', err);
@@ -26,9 +26,9 @@ export default defineConfig({
       },
       // Proxy Socket.IO requests to avoid CORS
       '/socket.io': {
-        target: 'http://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com',
+        target: 'https://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com',
         changeOrigin: true,
-        secure: false,
+        secure: false, // Set to false since you're using self-signed/invalid SSL cert
         ws: true, // Enable WebSocket proxying
       }
     }

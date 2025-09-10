@@ -4,21 +4,25 @@
  * This file contains all API endpoints and axios configurations
  * for the Fresher Party Voting System frontend application.
  * 
- * Base URL: http://your-api-domain/api/v1/fresherParty
+ * Base URL: https://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com/api/v1/fresherParty
  */
 
 import axios from 'axios';
 
-// API Configuration - Use relative paths, let Vite proxy handle routing
-const API_BASE_URL = '/api/v1/fresherParty';
+// API Configuration - Use proxy in development, direct URL in production
+const API_BASE_URL = import.meta.env.DEV 
+  ? '/api/v1/fresherParty'  // Use Vite proxy in development
+  : 'https://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com/api/v1/fresherParty';
 
 // Create axios instance with default configuration
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
+    'Accept': 'application/json',
   },
   timeout: 30000, // 30 second timeout
+  withCredentials: false, // Set to false for cross-origin requests
 });
 
 // Request interceptor to add JWT token to all requests

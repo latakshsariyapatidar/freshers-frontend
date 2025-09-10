@@ -4,19 +4,23 @@
  * This file contains all API endpoints and axios configurations
  * for the Fresher Party Voting System frontend application.
  * 
- * Base URL: https://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com/api/v1/fresherParty
+ * Configuration:
+ * - Uses VITE_API_URL environment variable for base URL
+ * - Automatically appends /v1/fresherParty to the base URL
+ * - Fallback: https://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com/api
+ * - Socket.IO uses VITE_SOCKET_URL environment variable
  */
 
 import axios from 'axios';
 
-// API Configuration - Use proxy in development, direct URL in production
-const API_BASE_URL = import.meta.env.DEV 
-  ? '/api/v1/fresherParty'  // Use Vite proxy in development
-  : 'https://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com/api/v1/fresherParty';
+// API Configuration - Use environment variable for base URL
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com/api';
+const API_VERSION_PATH = '/v1/fresherParty';
+const FULL_API_BASE_URL = `${API_BASE_URL}${API_VERSION_PATH}`;
 
 // Create axios instance with default configuration
 const apiClient = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: FULL_API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -37,14 +41,12 @@ apiClient.interceptors.request.use(
     }
     
     // Log outgoing requests in development
-    if (import.meta.env.DEV) {
-      console.log('🚀 API Request:', {
-        method: config.method?.toUpperCase(),
-        url: config.url,
-        data: config.data,
-        headers: config.headers
-      });
-    }
+    console.log('🚀 API Request:', {
+      method: config.method?.toUpperCase(),
+      url: `${FULL_API_BASE_URL}${config.url}`,
+      data: config.data,
+      headers: { ...config.headers, Authorization: config.headers.Authorization ? '[HIDDEN]' : 'None' }
+    });
     
     return config;
   },
@@ -57,14 +59,12 @@ apiClient.interceptors.request.use(
 // Response interceptor to handle common response patterns and errors
 apiClient.interceptors.response.use(
   (response) => {
-    // Log successful responses in development
-    if (import.meta.env.DEV) {
-      console.log('✅ API Response:', {
-        status: response.status,
-        url: response.config.url,
-        data: response.data
-      });
-    }
+    // Log successful responses
+    console.log('✅ API Response:', {
+      status: response.status,
+      url: response.config.url,
+      data: response.data
+    });
     
     return response;
   },
@@ -86,14 +86,13 @@ apiClient.interceptors.response.use(
         }
       }
       
-      // Log errors in development
-      if (import.meta.env.DEV) {
-        console.error('❌ API Error:', {
-          status,
-          message: data?.message || 'Unknown error',
-          url: error.config?.url
-        });
-      }
+      // Log errors
+      console.error('❌ API Error:', {
+        status,
+        message: data?.message || 'Unknown error',
+        url: error.config?.url,
+        fullUrl: `${FULL_API_BASE_URL}${error.config?.url || ''}`
+      });
       
       // Return structured error object
       return Promise.reject({
@@ -571,6 +570,50 @@ export const getAuthToken = () => {
   return localStorage.getItem('authToken') || localStorage.getItem('token');
 };
 
+/**
+ * Create Socket.IO connection
+ * @returns {Promise} Socket.IO instance
+ */
+export const createSocket = async () => {
+  try {
+    // Dynamically import socket.io-client to avoid build issues if not installed
+    const { io } = await import('socket.io-client');
+    
+    const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'https://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com';
+    
+    const socket = io(SOCKET_URL, {
+      transports: ['websocket', 'polling'],
+      upgrade: true,
+      rememberUpgrade: true,
+      timeout: 10000,
+      forceNew: false,
+      autoConnect: true,
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+    });
+
+    console.log('🔌 Attempting to connect to Socket.IO server:', SOCKET_URL);
+    
+    socket.on('connect', () => {
+      console.log('✅ Socket.IO connected:', socket.id);
+    });
+    
+    socket.on('disconnect', (reason) => {
+      console.log('❌ Socket.IO disconnected:', reason);
+    });
+    
+    socket.on('connect_error', (error) => {
+      console.error('❌ Socket.IO connection error:', error);
+    });
+
+    return socket;
+  } catch (error) {
+    console.error('❌ Failed to create socket connection:', error);
+    throw error;
+  }
+};
+
 // =============================================================================
 // LEGACY SERVICES FOR BACKWARD COMPATIBILITY
 // =============================================================================
@@ -696,6 +739,9 @@ export default {
   getCurrentUser,
   isAdmin,
   getAuthToken,
+  
+  // Socket.IO
+  createSocket,
   
   // Legacy services
   authService,

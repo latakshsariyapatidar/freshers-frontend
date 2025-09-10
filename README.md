@@ -91,11 +91,11 @@ src/
    Create a `.env` file in the root directory:
    ```env
    # API Configuration for Fresher Party Voting System
-   VITE_API_URL=http://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com/api
-   VITE_SOCKET_URL=http://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com
+   VITE_API_URL=https://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com/api
+   VITE_SOCKET_URL=https://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com
    
    # Legacy API URL (keep for backward compatibility)
-   API_URL=http://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com
+   API_URL=https://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com
    ```
 
 4. **Start development server**
@@ -314,7 +314,7 @@ npm run build
    ```javascript
    // Vite proxy automatically forwards /api requests to backend
    // Development: http://localhost:5175/api/v1/fresherParty/signup
-   // Proxied to: http://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com/api/v1/fresherParty/signup
+   // Proxied to: https://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com/api/v1/fresherParty/signup
    ```
 
 2. **API Connection Issues**
@@ -348,7 +348,7 @@ VITE_API_URL=http://localhost:5175/api
 server: {
   proxy: {
     '/api': {
-      target: 'http://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com',
+   target: 'https://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com',
       changeOrigin: true,
       secure: false
     }
@@ -359,7 +359,7 @@ server: {
 #### Production (Direct API Calls)
 ```env
 # .env for production
-VITE_API_URL=http://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com/api
+VITE_API_URL=https://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com/api
 ```
 
 ### Debug Mode

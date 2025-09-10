@@ -159,7 +159,7 @@ const Schedule = () => {
       time: '5:00 PM',
       endTime: '6:00 PM',
       category: 'Main Competition',
-      title: 'MR and MISS Freshie Live Decision',
+      title: 'Mr and Miss Freshie Live Decision',
       description: 'The ultimate competition with live events and decision',
       icon: Crown,
       color: '#eab308', // yellow-500

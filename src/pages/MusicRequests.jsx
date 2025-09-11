@@ -14,13 +14,15 @@ const MusicRequests = () => {
     songLink2: '',
     songLink3: ''
   });
-  const [showWarning, setShowWarning] = useState(false);
 
-  // Helper function to pad array to length 3 with empty strings
+  // Default song to fill empty slots (not shown to user)
+  const DEFAULT_SONG = 'https://open.spotify.com/track/1rEVydQSe04NJUqyyEyeEq?si=77634cc57bcb4d89';
+
+  // Helper function to pad array to length 3 with default song
   const padArrayToThree = (arr) => {
     const paddedArray = [...arr];
     while (paddedArray.length < 3) {
-      paddedArray.push('');
+      paddedArray.push(DEFAULT_SONG);
     }
     return paddedArray;
   };
@@ -31,7 +33,6 @@ const MusicRequests = () => {
     // Clear previous messages
     setError('');
     setSuccess('');
-    setShowWarning(false);
     setSubmitting(true);
 
     try {
@@ -56,45 +57,9 @@ const MusicRequests = () => {
         }
       }
 
-      // Show warning if submitting less than 3 songs
-      if (links.length < 3) {
-        setShowWarning(true);
-        setSubmitting(false);
-        return;
-      }
-
-      // Pad array to length 3 for API consistency
-      const paddedLinks = padArrayToThree(links);
-
-      const result = await submitSongSuggestions({
-        songLinks: paddedLinks
-      });
-
-      if (result.success) {
-        setSuccess('Your request is submitted and will be reviewed by our DJ team. If you think this was a mistake, then let everyone enjoy the mistake😉');
-        setFormData({ songLink1: '', songLink2: '', songLink3: '' });
-        setShowForm(false);
-        setHasSubmitted(true);
-      } else {
-        setError(result.error || 'Failed to submit song suggestions');
-      }
-    } catch (error) {
-      console.error('Failed to submit request:', error);
-      setError('Failed to submit your song suggestions. Please try again.');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const handleWarningConfirm = async () => {
-    setShowWarning(false);
-    setSubmitting(true);
-
-    try {
-      const links = [formData.songLink1, formData.songLink2, formData.songLink3]
-        .filter(link => link.trim() !== '');
-
-      // Pad array to length 3 for API consistency
+      // Always pad array to length 3 with default song for missing entries
+      // This ensures exactly 3 songs are always sent to the API
+      // Default song is not shown to the user but fills empty slots
       const paddedLinks = padArrayToThree(links);
 
       const result = await submitSongSuggestions({
@@ -141,7 +106,7 @@ const MusicRequests = () => {
           </h1>
           <p className="text-lg text-slate-300 max-w-2xl mx-auto">
             Share your favorite Spotify songs for the party playlist! 
-            You can submit 1-3 songs, but remember - you only get one chance!
+            You can submit 1-3 songs - remember, you only get one chance!
           </p>
           <div className="mt-4 p-4 bg-blue-900/20 border border-blue-500/30 rounded-lg max-w-lg mx-auto">
             <p className="text-sm text-blue-200">
@@ -288,54 +253,6 @@ const MusicRequests = () => {
                   </div>
                 </form>
               </div>
-            </Motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Warning Dialog */}
-        <AnimatePresence>
-          {showWarning && (
-            <Motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
-            >
-              <Motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                className="bg-slate-800 rounded-2xl p-6 max-w-md w-full border border-slate-700"
-              >
-                <div className="text-center mb-6">
-                  <div className="w-16 h-16 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Music className="h-8 w-8 text-yellow-400" />
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-2">
-                    One-Time Submission
-                  </h3>
-                  <p className="text-slate-300 text-sm">
-                    You're submitting fewer than 3 songs. Remember, you won't be able to submit again after this. 
-                    Are you sure you want to continue?
-                  </p>
-                </div>
-                
-                <div className="flex space-x-3">
-                  <button
-                    onClick={() => setShowWarning(false)}
-                    className="flex-1 px-4 py-2 bg-slate-700 text-slate-300 rounded-lg hover:bg-slate-600 transition-colors"
-                  >
-                    Go Back
-                  </button>
-                  <button
-                    onClick={handleWarningConfirm}
-                    disabled={submitting}
-                    className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-500 transition-colors disabled:opacity-50"
-                  >
-                    {submitting ? 'Submitting...' : 'Submit Anyway'}
-                  </button>
-                </div>
-              </Motion.div>
             </Motion.div>
           )}
         </AnimatePresence>

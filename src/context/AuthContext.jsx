@@ -40,10 +40,6 @@ const AuthProvider = ({ children }) => {
     return resolvedUser;
   }, []);
 
-  useEffect(() => {
-    checkAuthStatus();
-  }, [checkAuthStatus]);
-
   /**
    * Check current authentication status using the new API service
    */
@@ -67,6 +63,10 @@ const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   }, [persistUser]);
+
+  useEffect(() => {
+    checkAuthStatus();
+  }, [checkAuthStatus]);
 
   /**
    * Handle user login using the new API service

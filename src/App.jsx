@@ -11,6 +11,7 @@ import AdminPanel from "./pages/AdminPanel";
 import MusicRequests from "./pages/MusicRequests";
 import AnonymousMessages from "./pages/AnonymousMessages";
 import AdminAnonymousMessages from "./pages/AdminAnonymousMessages";
+import AddCandidate from "./pages/AddCandidate";
 import Schedule from "./pages/Schedule";
 import ProtectedRoute from "./components/ProtectedRoute";
 // Import debug test for signup
@@ -51,6 +52,14 @@ function App() {
                 element={
                   <ProtectedRoute requiresAdmin>
                     <AdminAnonymousMessages />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/addCandidate"
+                element={
+                  <ProtectedRoute requiresAdmin>
+                    <AddCandidate />
                   </ProtectedRoute>
                 }
               />

@@ -7,7 +7,8 @@ import {
   Music,
   MessageCircle,
   RefreshCw,
-  ArrowLeft
+  ArrowLeft,
+  UserPlus
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import {
@@ -252,9 +253,13 @@ const AdminPanel = () => {
                     <h2 className="text-lg font-semibold text-white">Candidates</h2>
                     <p className="text-xs text-white/40">Latest registrations across categories</p>
                   </div>
-                  <span className="text-xs text-white/45 tracking-[0.3em] uppercase">
-                    {candidates.length} total
-                  </span>
+                  <button
+                    onClick={() => navigate('/admin/addCandidate')}
+                    className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-white text-xs transition-colors"
+                  >
+                    <UserPlus size={14} />
+                    Add
+                  </button>
                 </div>
                 <div className="space-y-3 max-h-80 overflow-y-auto pr-1">
                   {candidates.length === 0 ? (

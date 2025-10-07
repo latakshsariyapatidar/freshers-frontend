@@ -14,7 +14,6 @@ import MusicRequests from "./pages/MusicRequests";
 // import AnonymousMessages from './pages/AnonymousMessages'
 import Schedule from "./pages/Schedule";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { Analytics } from "@vercel/analytics/next";
 // Import debug test for signup
 if (import.meta.env.DEV) {
   import("./debug/signupTest.js");
@@ -66,7 +65,6 @@ function App() {
         </div>
       </Router>
 
-      <Analytics />
     </AuthProvider>
   );
 }

@@ -265,26 +265,7 @@ const Dashboard = () => {
           </section>
         )}
 
-        {/* Status */}
-        <section className="card space-y-4">
-          <h3 className="text-lg font-semibold text-white">System status</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-            <div className="surface-soft rounded-xl border border-white/8 p-4">
-              <p className="text-white/45">API connection</p>
-              <p className="text-white flex items-center gap-2 mt-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-                Connected to AWS EC2
-              </p>
-            </div>
-            <div className="surface-soft rounded-xl border border-white/8 p-4">
-              <p className="text-white/45">Authentication</p>
-              <p className="text-white flex items-center gap-2 mt-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-                JWT token active
-              </p>
-            </div>
-          </div>
-        </section>
+
       </div>
     </div>
   );

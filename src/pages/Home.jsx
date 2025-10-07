@@ -33,14 +33,6 @@ const Home = () => {
       link: '/music',
       accent: '#f25f4c',
       protected: true
-    },
-    {
-      icon: Gift,
-      title: 'Anonymous Messages',
-      description: 'Drop a whisper...)',
-      link: '/messages',
-      accent: '#f7b731',
-      protected: true
     }
   ];
 

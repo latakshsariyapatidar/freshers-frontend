@@ -3,7 +3,26 @@
  * 
  * This component shows the main dashboard after successful login/signup.
  * It displays user information and provides navigation to different features
- * like voting, song suggestions, and anonymous messages.
+ * like v          </div>
+
+          <div className="card flex flex-col gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-white/80">
+                <MessageCircle size={20} />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-white">Anonymous shoutouts</h3>
+                <p className="text-xs text-white/45">Coming soon</p>
+              </div>
+            </div>
+            <p className="text-sm text-white/65">
+              A secret messaging feature is being prepared. Stay tuned for the reveal!
+            </p>
+            <button disabled className="btn-secondary justify-center text-sm opacity-50 cursor-not-allowed">
+              Coming soon
+            </button>
+          </div>
+        </section>ons, and anonymous messages.
  */
 
 import React, { useState, useEffect } from 'react';

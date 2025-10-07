@@ -68,14 +68,14 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              <Route
+              {/* <Route
                 path="/messages"
                 element={
                   <ProtectedRoute>
                     <AnonymousMessages />
                   </ProtectedRoute>
                 }
-              />
+              /> */}
               <Route path="/schedule" element={<Schedule />} />
             </Routes>
           </main>

@@ -17,14 +17,39 @@ const useMessagesFormatter = (messages) => {
       return [];
     }
 
+    const deriveNameFromEmail = (email) => {
+      if (!email || typeof email !== 'string') {
+        return 'Unknown sender';
+      }
+
+      const [localPart] = email.split('@');
+      if (!localPart) {
+        return email;
+      }
+
+      const cleaned = localPart.replace(/[._-]+/g, ' ').trim();
+      if (!cleaned) {
+        return email;
+      }
+
+      return cleaned
+        .split(' ')
+        .filter(Boolean)
+        .map((chunk) => chunk.charAt(0).toUpperCase() + chunk.slice(1))
+        .join(' ');
+    };
+
     return messages.map((entry, index) => {
       const user = entry.user || entry.sender || entry.owner || {};
       const email = entry.email || entry.userEmail || user.email || entry.recipientEmail || null;
+      const rawName = user.name || entry.name || entry.userName || entry.senderName || null;
+      const displayName = rawName && rawName.trim() ? rawName : deriveNameFromEmail(email);
 
       return {
         id: entry._id || entry.id || `${email || 'msg'}-${index}`,
         email,
-        userName: user.name || entry.name || entry.userName || null,
+        userName: rawName,
+        displayName,
         message: entry.message || entry.content || entry.text || '',
         createdAt: entry.createdAt || entry.timestamp || entry.created_at || entry.createdOn || null,
         raw: entry
@@ -149,13 +174,16 @@ const AdminAnonymousMessages = () => {
               <div className="space-y-2">
                 <h1 className="text-3xl font-semibold text-white">Anonymous Message Inbox</h1>
                 <p className="text-white/60 text-sm">
-                  Review every anonymous whisper sent across campus. Filter by IIT Dharwad ID when something sketchy pops up.
+                  Review every anonymous whisper sent across campus. Filter by IIT Dharwad ID using the search panel on the right when something sketchy pops up.
                 </p>
               </div>
             </div>
 
-            <form onSubmit={handleSearch} className="w-full max-w-md">
-              <div className="surface-soft border border-white/10 rounded-full px-4 py-3 flex items-center gap-3">
+            <form onSubmit={handleSearch} className="w-full max-w-md space-y-2">
+              <label className="text-xs uppercase tracking-[0.25em] text-white/45">
+                Search messages by IIT Dharwad email
+              </label>
+              <div className="surface-soft border border-white/10 rounded-2xl px-4 py-3 flex items-center gap-3">
                 <Search size={18} className="text-white/40" />
                 <input
                   value={searchEmail}
@@ -172,6 +200,7 @@ const AdminAnonymousMessages = () => {
                   {searching ? 'Searching…' : 'Filter'}
                 </button>
               </div>
+              <p className="text-[11px] text-white/45">Example: username@iitdh.ac.in</p>
             </form>
           </div>
         </Motion.section>
@@ -268,24 +297,31 @@ const AdminAnonymousMessages = () => {
                   key={item.id}
                   className="surface-soft border border-white/10 rounded-3xl p-6 flex flex-col gap-4"
                 >
-                  <div className="flex flex-wrap items-center gap-3">
-                    <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.25em] text-white/60">
-                      <ShieldCheck size={14} />
-                      {item.email || 'anonymous@freshers'}
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="space-y-1">
+                      <span className="text-xs uppercase tracking-[0.25em] text-white/45">Sender</span>
+                      <div className="text-lg font-semibold text-white flex items-center gap-2">
+                        {item.displayName}
+                        {item.userName && item.userName !== item.displayName && (
+                          <span className="text-xs text-white/45">({item.userName})</span>
+                        )}
+                      </div>
+                      <span className="text-xs text-white/45">
+                        {item.email || 'Email hidden from record'}
+                      </span>
                     </div>
-                    {item.userName && (
-                      <span className="text-xs text-white/40">
-                        {item.userName}
-                      </span>
-                    )}
-                    {item.createdAt && (
-                      <span className="text-xs text-white/40">
-                        {new Date(item.createdAt).toLocaleString()}
-                      </span>
-                    )}
+                    <div className="flex flex-col items-start sm:items-end gap-2 text-xs text-white/45">
+                      <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 uppercase tracking-[0.25em]">
+                        <ShieldCheck size={14} />
+                        {filteredView ? 'Filtered' : 'Inbox'}
+                      </div>
+                      {item.createdAt && (
+                        <span>Received {new Date(item.createdAt).toLocaleString()}</span>
+                      )}
+                    </div>
                   </div>
 
-                  <p className="text-white/85 text-sm leading-relaxed whitespace-pre-wrap">
+                  <p className="text-white/80 text-sm leading-relaxed whitespace-pre-wrap">
                     {item.message || <span className="italic text-white/50">(Empty message body)</span>}
                   </p>
 

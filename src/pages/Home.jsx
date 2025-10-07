@@ -36,13 +36,11 @@ const Home = () => {
     },
     {
       icon: Gift,
-      title: 'Secret Drop',
-      description: 'A limited-time surprise for attendees',
-      link: '',
+      title: 'Anonymous Messages',
+      description: 'Drop a whisper that only the admins can trace',
+      link: '/messages',
       accent: '#f7b731',
-      protected: true,
-      surprise: true,
-      surpriseText: 'Hint: arrive early on Night Two!'
+      protected: true
     }
   ];
 

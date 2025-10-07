@@ -17,6 +17,10 @@
     {
       "source": "/socket.io/(.*)",
       "destination": "http://ec2-51-21-192-129.eu-north-1.compute.amazonaws.com:5000/socket.io/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/"
     }
   ]
 }

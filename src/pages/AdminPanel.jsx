@@ -23,7 +23,9 @@ const AdminPanel = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
   const [candidates, setCandidates] = useState([]);
-  const [songSuggestions, setSongSuggestions] = useState([]);
+  const [songSubmissions, setSongSubmissions] = useState([]);
+  const [uniqueSongLinks, setUniqueSongLinks] = useState([]);
+  const [songStats, setSongStats] = useState({ totalSubmissions: 0, uniqueSongs: 0 });
   const [messages, setMessages] = useState([]);
 
   const loadAdminData = useCallback(async (isRefresh = false) => {
@@ -51,9 +53,18 @@ const AdminPanel = () => {
       }
 
       if (songsRes?.success) {
-        setSongSuggestions(songsRes.suggestions || []);
+        setSongSubmissions(songsRes.submissions || []);
+        setUniqueSongLinks(songsRes.uniqueSongs || []);
+        setSongStats({
+          totalSubmissions:
+            songsRes.results?.totalSubmissions ?? (songsRes.submissions?.length ?? 0),
+          uniqueSongs:
+            songsRes.results?.uniqueSongs ?? (songsRes.uniqueSongs?.length ?? 0)
+        });
       } else {
-        setSongSuggestions([]);
+        setSongSubmissions([]);
+        setUniqueSongLinks([]);
+        setSongStats({ totalSubmissions: 0, uniqueSongs: 0 });
         failures.push('song requests');
       }
 
@@ -71,7 +82,9 @@ const AdminPanel = () => {
       console.error('Failed to load admin data:', err);
       setError(err.message || 'Failed to load admin data.');
       setCandidates([]);
-      setSongSuggestions([]);
+  setSongSubmissions([]);
+  setUniqueSongLinks([]);
+  setSongStats({ totalSubmissions: 0, uniqueSongs: 0 });
       setMessages([]);
     } finally {
       if (isRefresh) {
@@ -86,40 +99,60 @@ const AdminPanel = () => {
     loadAdminData(false);
   }, [loadAdminData]);
 
-  const summaryCards = useMemo(() => {
-    const totalSongLinks = songSuggestions.reduce((acc, entry) => {
-      const links = Array.isArray(entry?.songLinks) ? entry.songLinks.length : 0;
-      return acc + links;
-    }, 0);
-
-    return [
-      {
-        title: 'Registered candidates',
-        value: candidates.length,
-        subtext: 'Across all categories',
-        icon: Users,
-        accent: '#7f5af0'
-      },
-      {
-        title: 'Song requests',
-        value: totalSongLinks,
-        subtext: `${songSuggestions.length} submissions`,
-        icon: Music,
-        accent: '#2cb67d'
-      },
-      {
-        title: 'Anonymous messages',
-        value: messages.length,
-        subtext: 'Awaiting moderation',
-        icon: MessageCircle,
-        accent: '#f25f4c'
-      }
-    ];
-  }, [candidates.length, songSuggestions, messages.length]);
+  const summaryCards = useMemo(() => ([
+    {
+      title: 'Registered candidates',
+      value: candidates.length,
+      subtext: 'Across all categories',
+      icon: Users,
+      accent: '#7f5af0'
+    },
+    {
+      title: 'Song submissions',
+      value: songStats.totalSubmissions,
+      subtext: `${songStats.uniqueSongs} unique tracks`,
+      icon: Music,
+      accent: '#2cb67d'
+    },
+    {
+      title: 'Anonymous messages',
+      value: messages.length,
+      subtext: 'Awaiting moderation',
+      icon: MessageCircle,
+      accent: '#f25f4c'
+    }
+  ]), [candidates.length, songStats.totalSubmissions, songStats.uniqueSongs, messages.length]);
 
   const formatCategory = (category) => {
     if (!category) return 'General';
     return category.replace(/_/g, ' ');
+  };
+
+  const extractSpotifyTrackId = (link) => {
+    if (!link || typeof link !== 'string') return null;
+    const trimmed = link.trim();
+    const directMatch = trimmed.match(/track\/([A-Za-z0-9]+)/);
+    if (directMatch?.[1]) {
+      return directMatch[1];
+    }
+
+    try {
+      const url = new URL(trimmed);
+      const segments = url.pathname.split('/').filter(Boolean);
+      const trackIndex = segments.indexOf('track');
+      if (trackIndex !== -1 && segments[trackIndex + 1]) {
+        return segments[trackIndex + 1];
+      }
+    } catch {
+      return null;
+    }
+
+    return null;
+  };
+
+  const getSpotifyEmbedSrc = (link) => {
+    const trackId = extractSpotifyTrackId(link);
+    return trackId ? `https://open.spotify.com/embed/track/${trackId}?utm_source=generator` : null;
   };
 
   const renderLoadingState = () => (
@@ -212,7 +245,7 @@ const AdminPanel = () => {
               })}
             </section>
 
-            <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <section className="grid grid-cols-1 xl:grid-cols-3 gap-4">
               <div className="card space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
@@ -249,16 +282,16 @@ const AdminPanel = () => {
                     <p className="text-xs text-white/40">Spotify links submitted by attendees</p>
                   </div>
                   <span className="text-xs text-white/45 tracking-[0.3em] uppercase">
-                    {songSuggestions.length} submissions
+                    {songStats.totalSubmissions} submissions
                   </span>
                 </div>
                 <div className="space-y-3 max-h-80 overflow-y-auto pr-1">
-                  {songSuggestions.length === 0 ? (
+                  {songSubmissions.length === 0 ? (
                     <p className="text-sm text-white/50">No song requests yet.</p>
                   ) : (
-                    songSuggestions.map((entry) => (
+                    songSubmissions.map((entry, index) => (
                       <div
-                        key={entry?._id || entry?.id || entry?.user?.email}
+                        key={entry?._id || entry?.id || entry?.user?.email || `${entry?.userName}-${index}`}
                         className="surface-soft border border-white/5 rounded-xl px-4 py-3 space-y-2"
                       >
                         <div className="flex items-center justify-between text-xs text-white/45">
@@ -280,6 +313,60 @@ const AdminPanel = () => {
                         </div>
                       </div>
                     ))
+                  )}
+                </div>
+              </div>
+
+              <div className="card space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-lg font-semibold text-white">Unique Spotify tracks</h2>
+                    <p className="text-xs text-white/40">Curated from all submissions</p>
+                  </div>
+                  <span className="text-xs text-white/45 tracking-[0.3em] uppercase text-right">
+                    {songStats.uniqueSongs} tracks
+                  </span>
+                </div>
+                <div className="space-y-3 max-h-80 overflow-y-auto pr-1">
+                  {uniqueSongLinks.length === 0 ? (
+                    <p className="text-sm text-white/50">No unique tracks yet.</p>
+                  ) : (
+                    uniqueSongLinks.map((link, idx) => {
+                      const embedSrc = getSpotifyEmbedSrc(link);
+                      const itemKey = embedSrc || `${idx}-${link}`;
+                      return (
+                        <div
+                          key={itemKey}
+                          className="surface-soft border border-white/5 rounded-xl px-3 py-3 space-y-3"
+                        >
+                          {embedSrc ? (
+                            <iframe
+                              title={`spotify-track-${idx}`}
+                              src={embedSrc}
+                              width="100%"
+                              height="152"
+                              frameBorder="0"
+                              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                              loading="lazy"
+                              style={{ borderRadius: '12px' }}
+                            ></iframe>
+                          ) : (
+                            <p className="text-xs text-white/50">Preview unavailable for this link.</p>
+                          )}
+                          <div className="flex items-center justify-between text-xs text-white/45">
+                            <a
+                              href={link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-pink-300 hover:text-pink-200 truncate"
+                            >
+                              Open in Spotify
+                            </a>
+                            <span className="text-[10px] uppercase text-white/35">#{idx + 1}</span>
+                          </div>
+                        </div>
+                      );
+                    })
                   )}
                 </div>
               </div>

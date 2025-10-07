@@ -519,37 +519,25 @@ export const getAllSongSuggestions = async () => {
   try {
     const response = await apiClient.get('/songs/all');
     const rawData = response.data;
-    const potentialLists = [
-      rawData?.data?.suggestions,
-      rawData?.data?.songSuggestions,
-      rawData?.data,
-      rawData?.suggestions,
-      rawData?.songSuggestions
-    ];
+    const allSubmissionsRaw = rawData?.data?.allSubmissions
+      || rawData?.data?.submissions
+      || rawData?.data?.suggestions
+      || rawData?.data?.songSuggestions
+      || rawData?.suggestions
+      || rawData?.songSuggestions
+      || [];
 
-    let suggestions = potentialLists.find(Array.isArray);
-
-    if (!suggestions) {
-      const candidate = potentialLists.find((value) => value && typeof value === 'object');
-      if (candidate) {
-        suggestions = Object.values(candidate);
-      }
-    }
-
-    if (!Array.isArray(suggestions)) {
-      suggestions = [];
-    }
-
-    const normalizedSuggestions = suggestions.map((entry) => {
+    const normalizeSubmissionEntry = (entry) => {
       if (!entry || typeof entry !== 'object') {
-        return { songLinks: [], ...entry };
+        return {
+          songLinks: [],
+          user: undefined,
+          ...entry
+        };
       }
 
-      const songLinks = Array.isArray(entry.songLinks)
-        ? entry.songLinks
-        : Array.isArray(entry.links)
-          ? entry.links
-          : [];
+      const candidateLinks = [entry.songLinks, entry.links, entry.songs, entry.tracks];
+      const songLinks = candidateLinks.find(Array.isArray) || [];
 
       const user = entry.user || (entry.userEmail || entry.userName ? {
         email: entry.userEmail,
@@ -561,13 +549,54 @@ export const getAllSongSuggestions = async () => {
         user,
         songLinks
       };
-    });
+    };
+
+    const normalizedSubmissions = Array.isArray(allSubmissionsRaw)
+      ? allSubmissionsRaw.map(normalizeSubmissionEntry)
+      : Object.values(allSubmissionsRaw || {}).map(normalizeSubmissionEntry);
+
+    const uniqueSongsRaw = rawData?.data?.uniqueSongs
+      || rawData?.uniqueSongs
+      || [];
+
+    const flattenUniqueSongs = (list) => {
+      const result = [];
+      const seen = new Set();
+
+      const pushLink = (link) => {
+        if (typeof link !== 'string') return;
+        const trimmed = link.trim();
+        if (!trimmed) return;
+        const normalized = trimmed.split('?')[0];
+        if (seen.has(normalized)) return;
+        seen.add(normalized);
+        result.push(trimmed);
+      };
+
+      list.forEach((item) => {
+        if (Array.isArray(item)) {
+          item.forEach(pushLink);
+        } else {
+          pushLink(item);
+        }
+      });
+
+      return result;
+    };
+
+    const uniqueSongs = flattenUniqueSongs(uniqueSongsRaw);
+
+    const stats = rawData?.results || rawData?.data?.results || {
+      totalSubmissions: normalizedSubmissions.length,
+      uniqueSongs: uniqueSongs.length
+    };
 
     return {
       success: true,
       data: rawData,
-      suggestions: normalizedSuggestions,
-      results: rawData?.results
+      submissions: normalizedSubmissions,
+      uniqueSongs,
+      results: stats
     };
   } catch (error) {
     return {

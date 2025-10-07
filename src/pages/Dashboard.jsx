@@ -233,15 +233,15 @@ const Dashboard = () => {
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-white">Anonymous shoutouts</h3>
-                <p className="text-xs text-white/45">Coming soon</p>
+                <p className="text-xs text-white/45">Drop a secret compliment</p>
               </div>
             </div>
             <p className="text-sm text-white/65">
-              A new space to share compliments and hype your peers—going live with the main event.
+              Fire off a totally anonymous note—just like NGL, but for Freshers Night. We’ll only reveal it if someone caught you typing.
             </p>
-            <button className="btn-secondary justify-center text-sm" disabled>
-              Teaser arriving soon
-            </button>
+            <Link to="/messages" className="btn-secondary justify-center text-sm">
+              Launch secret drop
+            </Link>
           </div>
         </section>
 

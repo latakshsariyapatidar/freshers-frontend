@@ -8,11 +8,9 @@ import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import ApiTestPage from "./pages/ApiTestPage";
 import AdminPanel from "./pages/AdminPanel";
-// TODO: Temporarily hidden - will be enabled later
-// import Voting from './pages/Voting'
 import MusicRequests from "./pages/MusicRequests";
-// TODO: Temporarily hidden - will be enabled later
-// import AnonymousMessages from './pages/AnonymousMessages'
+import AnonymousMessages from "./pages/AnonymousMessages";
+import AdminAnonymousMessages from "./pages/AdminAnonymousMessages";
 import Schedule from "./pages/Schedule";
 import ProtectedRoute from "./components/ProtectedRoute";
 // Import debug test for signup
@@ -48,6 +46,14 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/admin/messages"
+                element={
+                  <ProtectedRoute requiresAdmin>
+                    <AdminAnonymousMessages />
+                  </ProtectedRoute>
+                }
+              />
               {/* TODO: Temporarily hidden - will be enabled later */}
               {/* <Route path="/voting" element={
                 <ProtectedRoute>
@@ -62,12 +68,14 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              {/* TODO: Temporarily hidden - will be enabled later */}
-              {/* <Route path="/messages" element={
-                <ProtectedRoute>
-                  <AnonymousMessages />
-                </ProtectedRoute>
-              } /> */}
+              <Route
+                path="/messages"
+                element={
+                  <ProtectedRoute>
+                    <AnonymousMessages />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="/schedule" element={<Schedule />} />
             </Routes>
           </main>

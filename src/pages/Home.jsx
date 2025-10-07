@@ -109,13 +109,6 @@ const Home = () => {
               <p className="text-xs text-white/40 mt-1">Night Two · Saturday · Oct 11 · 4 PM – 11 PM</p>
             </div>
           </div>
-          <div className="space-y-2">
-            <p className="text-xs uppercase tracking-[0.3em] text-white/40">Dress Code</p>
-            <div className="text-white/80">
-              <p>Modern festive. Add a hint of purple or silver.</p>
-              <p className="text-xs text-white/40 mt-1">Best dressed gets stage time.</p>
-            </div>
-          </div>
         </Motion.div>
       </section>
 

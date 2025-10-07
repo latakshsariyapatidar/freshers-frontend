@@ -88,7 +88,7 @@ const Home = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.15 }}
-          className="card grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 text-left"
+          className="card grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 text-left"
         >
           <div className="space-y-2">
             <p className="text-xs uppercase tracking-[0.3em] text-white/40">Venue</p>

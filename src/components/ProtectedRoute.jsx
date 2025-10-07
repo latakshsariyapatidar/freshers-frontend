@@ -19,7 +19,7 @@ const ProtectedRoute = ({ children, requiresAdmin = false }) => {
   }
 
   if (requiresAdmin && !isAdminUser) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/dashboard" state={{ from: location, unauthorized: true }} replace />;
   }
 
   return children;

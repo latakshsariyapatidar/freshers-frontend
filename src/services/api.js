@@ -518,12 +518,56 @@ export const getMessagesByEmail = async (email) => {
 export const getAllSongSuggestions = async () => {
   try {
     const response = await apiClient.get('/songs/all');
-    
+    const rawData = response.data;
+    const potentialLists = [
+      rawData?.data?.suggestions,
+      rawData?.data?.songSuggestions,
+      rawData?.data,
+      rawData?.suggestions,
+      rawData?.songSuggestions
+    ];
+
+    let suggestions = potentialLists.find(Array.isArray);
+
+    if (!suggestions) {
+      const candidate = potentialLists.find((value) => value && typeof value === 'object');
+      if (candidate) {
+        suggestions = Object.values(candidate);
+      }
+    }
+
+    if (!Array.isArray(suggestions)) {
+      suggestions = [];
+    }
+
+    const normalizedSuggestions = suggestions.map((entry) => {
+      if (!entry || typeof entry !== 'object') {
+        return { songLinks: [], ...entry };
+      }
+
+      const songLinks = Array.isArray(entry.songLinks)
+        ? entry.songLinks
+        : Array.isArray(entry.links)
+          ? entry.links
+          : [];
+
+      const user = entry.user || (entry.userEmail || entry.userName ? {
+        email: entry.userEmail,
+        name: entry.userName
+      } : undefined);
+
+      return {
+        ...entry,
+        user,
+        songLinks
+      };
+    });
+
     return {
       success: true,
-      data: response.data,
-      suggestions: response.data.data.suggestions,
-      results: response.data.results
+      data: rawData,
+      suggestions: normalizedSuggestions,
+      results: rawData?.results
     };
   } catch (error) {
     return {

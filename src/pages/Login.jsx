@@ -33,52 +33,52 @@ const Login = () => {
     setError('');
 
     const result = await login(formData.email, formData.password);
-    
+
     if (result.success) {
       navigate(from, { replace: true });
     } else {
       setError(result.error);
     }
-    
+
     setLoading(false);
   };
 
   return (
-    <div className="min-h-screen pt-16 sm:pt-20 lg:pt-24 flex items-center justify-center px-3 sm:px-4">
+    <div className="px-4 sm:px-6 lg:px-8 pb-24">
       <Motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="w-full max-w-sm sm:max-w-md"
+        className="w-full max-w-sm sm:max-w-md mx-auto mt-8"
       >
         <div className="card">
-          <div className="text-center mb-8">
-            <div className="flex justify-center mb-4">
-              <div className="w-16 h-16 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-full flex items-center justify-center">
-                <PartyPopper className="h-8 w-8 text-white" />
+          <div className="text-center mb-8 space-y-3">
+            <div className="flex justify-center">
+              <div className="w-14 h-14 rounded-2xl flex items-center justify-center" style={{ backgroundColor: 'rgba(127,90,240,0.18)', color: '#7f5af0' }}>
+                <PartyPopper className="h-7 w-7" />
               </div>
             </div>
-            <h1 className="text-2xl font-bold gradient-text">Welcome Back!</h1>
-            <p className="text-gray-600 mt-2">Login to join the party</p>
+            <h1 className="text-2xl font-semibold text-white">Welcome back</h1>
+            <p className="text-sm text-white/55">Sign in to manage your Freshers Night experience.</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
               <Motion.div
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="bg-red-900/30 border border-red-500/50 text-red-300 px-4 py-3 rounded-lg"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200"
               >
                 {error}
               </Motion.div>
             )}
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">
-               Institute Email Address
+              <label className="block text-sm font-medium text-white/70 mb-2">
+                Institute Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/30" />
                 <input
                   type="email"
                   name="email"
@@ -92,11 +92,11 @@ const Login = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">
+              <label className="block text-sm font-medium text-white/70 mb-2">
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/30" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   name="password"
@@ -109,7 +109,7 @@ const Login = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-300"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/40 hover:text-white/80"
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
@@ -119,7 +119,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full btn-primary justify-center disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <div className="flex items-center justify-center space-x-2">
@@ -133,9 +133,9 @@ const Login = () => {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-slate-300">
+            <p className="text-white/60 text-sm">
               Don't have an account?{' '}
-              <Link to="/signup" className="text-blue-400 hover:text-blue-300 font-semibold">
+              <Link to="/signup" className="text-white hover:text-white font-semibold underline-offset-4 hover:underline">
                 Sign up here
               </Link>
             </p>

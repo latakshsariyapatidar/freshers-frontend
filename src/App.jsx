@@ -24,9 +24,9 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-800 text-slate-100">
+        <div className="min-h-screen app-shell">
           <Navbar />
-          <main className="pb-20">
+          <main className="pb-28 pt-16 lg:pt-24">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />

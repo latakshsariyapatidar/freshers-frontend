@@ -35,6 +35,33 @@ const Dashboard = () => {
     myMessages: 0
   });
 
+  const metricCards = [
+    {
+      label: 'Mr. Fresher candidates',
+      value: stats.mrFresherCandidates,
+      icon: Trophy,
+      accent: '#7f5af0'
+    },
+    {
+      label: 'Miss Fresher candidates',
+      value: stats.missFresherCandidates,
+      icon: Trophy,
+      accent: '#a08afa'
+    },
+    {
+      label: 'Your song submissions',
+      value: stats.mySongs,
+      icon: Music,
+      accent: '#2cb67d'
+    },
+    {
+      label: 'Your messages sent',
+      value: stats.myMessages,
+      icon: MessageCircle,
+      accent: '#f25f4c'
+    }
+  ];
+
   useEffect(() => {
     if (isAuthenticated()) {
       loadDashboardData();
@@ -90,211 +117,174 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-white text-lg">Loading Dashboard...</p>
+      <div className="px-4 sm:px-6 lg:px-8 pb-28">
+        <div className="min-h-[60vh] flex items-center justify-center">
+          <div className="text-center space-y-4">
+            <div className="w-14 h-14 border-3 border-white/20 border-t-transparent rounded-full animate-spin mx-auto"></div>
+            <p className="text-white/70 text-sm uppercase tracking-[0.35em]">Loading dashboard</p>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
-      {/* Header */}
-      <header className="bg-black/20 backdrop-blur-sm border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
-                <PartyPopper className="h-6 w-6 text-white" />
+    <div className="px-4 sm:px-6 lg:px-8 pb-28">
+      <div className="max-w-6xl mx-auto space-y-10">
+        {/* Header */}
+        <section className="card">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: 'rgba(127,90,240,0.18)', color: '#7f5af0' }}>
+                <PartyPopper className="h-6 w-6" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-white">Fresher Party</h1>
-                <p className="text-sm text-blue-300">Voting System</p>
+                <p className="text-sm uppercase tracking-[0.35em] text-white/45">Dashboard</p>
+                <h1 className="text-2xl font-semibold text-white mt-1">Welcome back, {user?.name}</h1>
+                <p className="text-white/55 text-sm mt-1">
+                  Prep for Freshers Night with live stats and quick actions.
+                </p>
               </div>
             </div>
-            
-            <div className="flex items-center space-x-4">
-              <div className="text-right">
-                <p className="text-sm text-white font-medium">{user?.name}</p>
-                <p className="text-xs text-blue-300">{user?.email}</p>
-                {isAdmin() && (
-                  <span className="inline-block px-2 py-1 text-xs bg-yellow-500 text-black rounded-full font-medium">
-                    Admin
-                  </span>
-                )}
+            <div className="flex flex-col sm:flex-row gap-3">
+              <div className="surface-soft px-4 py-3 rounded-2xl border border-white/8 flex items-center gap-3 min-w-[220px]">
+                <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center">
+                  <User size={18} />
+                </div>
+                <div className="text-sm">
+                  <p className="font-medium text-white truncate">{user?.name}</p>
+                  <p className="text-white/45 truncate">{user?.email}</p>
+                  {isAdmin() && (
+                    <span className="badge-muted mt-1 inline-block text-[10px] tracking-[0.3em] uppercase">Admin</span>
+                  )}
+                </div>
               </div>
-              <button
-                onClick={logout}
-                className="p-2 text-white hover:bg-white/10 rounded-lg transition-colors"
-                title="Logout"
-              >
-                <LogOut className="h-5 w-5" />
+              <button onClick={logout} className="btn-ghost flex items-center justify-center gap-2 text-sm">
+                <LogOut size={16} />
+                Logout
               </button>
             </div>
           </div>
-        </div>
-      </header>
+        </section>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Welcome Section */}
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-white mb-2">
-            Welcome back, {user?.name}! 🎉
-          </h2>
-          <p className="text-blue-200">
-            Ready to participate in the Fresher Party? Cast your votes, suggest songs, and send messages!
-          </p>
-        </div>
-
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 rounded-xl shadow-lg">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-blue-100 text-sm font-medium">Mr. Fresher</p>
-                <p className="text-3xl font-bold text-white">{stats.mrFresherCandidates}</p>
-                <p className="text-blue-200 text-sm">Candidates</p>
-              </div>
-              <Trophy className="h-12 w-12 text-white opacity-80" />
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-r from-pink-500 to-purple-600 p-6 rounded-xl shadow-lg">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-pink-100 text-sm font-medium">Miss Fresher</p>
-                <p className="text-3xl font-bold text-white">{stats.missFresherCandidates}</p>
-                <p className="text-pink-200 text-sm">Candidates</p>
-              </div>
-              <Trophy className="h-12 w-12 text-white opacity-80" />
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-r from-green-500 to-blue-600 p-6 rounded-xl shadow-lg">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-green-100 text-sm font-medium">My Songs</p>
-                <p className="text-3xl font-bold text-white">{stats.mySongs}</p>
-                <p className="text-green-200 text-sm">Suggestions</p>
-              </div>
-              <Music className="h-12 w-12 text-white opacity-80" />
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-r from-yellow-500 to-orange-600 p-6 rounded-xl shadow-lg">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-yellow-100 text-sm font-medium">My Messages</p>
-                <p className="text-3xl font-bold text-white">{stats.myMessages}</p>
-                <p className="text-yellow-200 text-sm">Sent</p>
-              </div>
-              <MessageCircle className="h-12 w-12 text-white opacity-80" />
-            </div>
-          </div>
-        </div>
-
-        {/* Action Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Voting Card */}
-          <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20 hover:bg-white/20 transition-all cursor-pointer group">
-            <div className="flex items-center mb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Vote className="h-6 w-6 text-white" />
-              </div>
-              <div className="ml-4">
-                <h3 className="text-xl font-semibold text-white">Cast Your Vote</h3>
-                <p className="text-blue-200">Vote for Mr. & Miss Fresher</p>
-              </div>
-            </div>
-            <p className="text-gray-300 mb-4">
-              Participate in the voting and choose your favorite candidates for Mr. Fresher and Miss Fresher.
-            </p>
-            <button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-2 px-4 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-colors">
-              Start Voting
-            </button>
-          </div>
-
-          {/* Song Suggestions Card */}
-          <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20 hover:bg-white/20 transition-all cursor-pointer group">
-            <div className="flex items-center mb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-blue-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Music className="h-6 w-6 text-white" />
-              </div>
-              <div className="ml-4">
-                <h3 className="text-xl font-semibold text-white">Song Suggestions</h3>
-                <p className="text-green-200">Add your favorite tracks</p>
-              </div>
-            </div>
-            <p className="text-gray-300 mb-4">
-              Suggest up to 3 songs from Spotify for the party playlist. Help create the perfect party vibe!
-            </p>
-            <button className="w-full bg-gradient-to-r from-green-500 to-blue-600 text-white py-2 px-4 rounded-lg hover:from-green-600 hover:to-blue-700 transition-colors">
-              Add Songs
-            </button>
-          </div>
-
-          {/* Anonymous Messages Card */}
-          <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20 hover:bg-white/20 transition-all cursor-pointer group">
-            <div className="flex items-center mb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                <MessageCircle className="h-6 w-6 text-white" />
-              </div>
-              <div className="ml-4">
-                <h3 className="text-xl font-semibold text-white">Send Messages</h3>
-                <p className="text-yellow-200">Anonymous messaging</p>
-              </div>
-            </div>
-            <p className="text-gray-300 mb-4">
-              Send anonymous messages to share your thoughts, compliments, or party wishes with everyone.
-            </p>
-            <button className="w-full bg-gradient-to-r from-yellow-500 to-orange-600 text-white py-2 px-4 rounded-lg hover:from-yellow-600 hover:to-orange-700 transition-colors">
-              Send Message
-            </button>
-          </div>
-
-          {/* Admin Panel (if admin) */}
-          {isAdmin() && (
-            <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-yellow-500/50 hover:bg-white/20 transition-all cursor-pointer group md:col-span-2 lg:col-span-3">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-yellow-500 to-red-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Settings className="h-6 w-6 text-white" />
+        {/* Stats */}
+        <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+          {metricCards.map(({ label, value, icon, accent }) => {
+            const Icon = icon;
+            return (
+            <div key={label} className="surface-soft p-5 rounded-2xl border border-white/5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.3em] text-white/45">{label}</p>
+                  <p className="text-3xl font-semibold text-white mt-3">{value}</p>
                 </div>
-                <div className="ml-4">
-                  <h3 className="text-xl font-semibold text-white">Admin Panel</h3>
-                  <p className="text-yellow-200">Manage the party system</p>
+                <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ backgroundColor: accent + '22', color: accent }}>
+                  <Icon size={22} />
                 </div>
               </div>
-              <p className="text-gray-300 mb-4">
-                Access admin features like viewing all candidates, messages, song suggestions, and managing the system.
+            </div>
+            );
+          })}
+        </section>
+
+        {/* Quick Actions */}
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="card flex flex-col gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-white/80">
+                <Vote size={20} />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-white">Cast your vote</h3>
+                <p className="text-xs text-white/45">Opens when the event goes live</p>
+              </div>
+            </div>
+            <p className="text-sm text-white/65">
+              When the curtain lifts on Night Two, place your votes for Mr & Ms Freshie. Results update in real time here.
+            </p>
+            <button className="btn-secondary justify-center text-sm" disabled>
+              Voting opens Oct 11
+            </button>
+          </div>
+
+          <div className="card flex flex-col gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-white/80">
+                <Music size={20} />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-white">Request tracks</h3>
+                <p className="text-xs text-white/45">3 slots · Spotify links only</p>
+              </div>
+            </div>
+            <p className="text-sm text-white/65">
+              Submit up to three songs for the DJ set. We’ll confirm once they’re reviewed by the music team.
+            </p>
+            <Link to="/music" className="btn-primary justify-center text-sm">
+              Share my picks
+            </Link>
+          </div>
+
+          <div className="card flex flex-col gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-white/80">
+                <MessageCircle size={20} />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-white">Anonymous shoutouts</h3>
+                <p className="text-xs text-white/45">Coming soon</p>
+              </div>
+            </div>
+            <p className="text-sm text-white/65">
+              A new space to share compliments and hype your peers—going live with the main event.
+            </p>
+            <button className="btn-secondary justify-center text-sm" disabled>
+              Teaser arriving soon
+            </button>
+          </div>
+        </section>
+
+        {/* Admin */}
+        {isAdmin() && (
+          <section className="card">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-white/80">
+                  <Settings size={20} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white">Admin toolkit</h3>
+                  <p className="text-xs text-white/45">Manage candidates, playlists, and submissions</p>
+                </div>
+              </div>
+              <button className="btn-primary justify-center text-sm">
+                Open admin panel
+              </button>
+            </div>
+          </section>
+        )}
+
+        {/* Status */}
+        <section className="card space-y-4">
+          <h3 className="text-lg font-semibold text-white">System status</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+            <div className="surface-soft rounded-xl border border-white/8 p-4">
+              <p className="text-white/45">API connection</p>
+              <p className="text-white flex items-center gap-2 mt-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                Connected to AWS EC2
               </p>
-              <button className="bg-gradient-to-r from-yellow-500 to-red-600 text-white py-2 px-6 rounded-lg hover:from-yellow-600 hover:to-red-700 transition-colors">
-                Open Admin Panel
-              </button>
             </div>
-          )}
-        </div>
-
-        {/* API Status Section */}
-        <div className="mt-8 bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/10">
-          <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-            <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
-            System Status
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-            <div>
-              <p className="text-gray-400">API Connection:</p>
-              <p className="text-green-400">✓ Connected to AWS EC2</p>
-            </div>
-            <div>
-              <p className="text-gray-400">Authentication:</p>
-              <p className="text-green-400">✓ JWT Token Active</p>
+            <div className="surface-soft rounded-xl border border-white/8 p-4">
+              <p className="text-white/45">Authentication</p>
+              <p className="text-white flex items-center gap-2 mt-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                JWT token active
+              </p>
             </div>
           </div>
-        </div>
-      </main>
+        </section>
+      </div>
     </div>
   );
 };

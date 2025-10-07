@@ -17,31 +17,28 @@ const OtpVerification = memo(({
 }) => (
   <div>
     {/* Header Section */}
-    <div className="text-center mb-6 lg:mb-8">
-      <div className="flex justify-center mb-4">
-        <div className="w-16 h-16 lg:w-20 lg:h-20 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center shadow-lg">
-          <Shield className="h-8 w-8 lg:h-10 lg:w-10 text-white" />
+    <div className="text-center mb-6 lg:mb-8 space-y-3">
+      <div className="flex justify-center">
+        <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-2xl flex items-center justify-center" style={{ backgroundColor: 'rgba(44,182,125,0.18)', color: '#2cb67d' }}>
+          <Shield className="h-8 w-8 lg:h-10 lg:w-10" />
         </div>
       </div>
-      <h1 className="text-2xl lg:text-3xl font-bold gradient-text mb-2">Verify Your Email</h1>
-      <p className="text-slate-300 text-sm lg:text-base mb-2">
-        We've sent a 6-digit verification code to
-      </p>
-      <p className="text-blue-400 font-semibold text-sm lg:text-base">
-        {formData.email}
+      <h1 className="text-2xl lg:text-3xl font-semibold text-white">Verify your email</h1>
+      <p className="text-white/55 text-sm lg:text-base">
+        We sent a 6-digit code to <span className="text-white/80 font-medium">{formData.email}</span>
       </p>
     </div>
 
     <form onSubmit={handleOtpSubmit} className="space-y-6">
       {error && (
-        <div className="bg-red-900/30 border border-red-500 text-red-100 px-4 py-3 rounded-lg text-sm lg:text-base">
+        <div className="rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm lg:text-base text-red-200">
           {error}
         </div>
       )}
 
       {/* OTP Input */}
       <div>
-        <label className="block text-sm font-medium text-slate-300 mb-4 text-center">
+        <label className="block text-sm font-medium text-white/70 mb-4 text-center">
           Enter 6-digit verification code
         </label>
         <div className="flex justify-center space-x-2 lg:space-x-3">
@@ -54,7 +51,7 @@ const OtpVerification = memo(({
               value={digit}
               onChange={(e) => handleOtpChange(index, e.target.value)}
               onKeyDown={(e) => handleOtpKeyDown(index, e)}
-              className="w-12 h-10 lg:w-15 lg:h-12 text-center text-lg lg:text-xl font-bold dark-input rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-12 h-10 lg:w-16 lg:h-12 text-center text-lg lg:text-xl font-semibold dark-input rounded-lg focus:ring-2 focus:ring-[rgba(127,90,240,0.35)] focus:border-transparent"
               placeholder="0"
             />
           ))}
@@ -66,7 +63,7 @@ const OtpVerification = memo(({
         <button
           type="submit"
           disabled={otpLoading}
-          className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed py-3 lg:py-4 text-sm lg:text-base font-semibold transform transition-all hover:scale-[1.02]"
+          className="w-full btn-primary justify-center disabled:opacity-60 disabled:cursor-not-allowed py-3 lg:py-4 text-sm lg:text-base font-semibold"
         >
           {otpLoading ? (
             <div className="flex items-center justify-center space-x-2">
@@ -81,7 +78,7 @@ const OtpVerification = memo(({
         <button
           type="button"
           onClick={handleBackToSignup}
-          className="w-full flex items-center justify-center space-x-2 text-slate-400 hover:text-slate-200 transition-colors py-2"
+          className="w-full flex items-center justify-center gap-2 text-white/60 hover:text-white transition-colors py-2"
         >
           <ArrowLeft className="h-4 w-4" />
           <span>Back to signup form</span>
@@ -106,19 +103,19 @@ const SignupForm = memo(({
 }) => (
   <div>
     {/* Header Section */}
-    <div className="text-center mb-6 lg:mb-8">
-      <div className="flex justify-center mb-4">
-        <div className="w-16 h-16 lg:w-20 lg:h-20 bg-gradient-to-r from-blue-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
-          <PartyPopper className="h-8 w-8 lg:h-10 lg:w-10 text-white" />
+    <div className="text-center mb-6 lg:mb-8 space-y-3">
+      <div className="flex justify-center">
+        <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-2xl flex items-center justify-center" style={{ backgroundColor: 'rgba(127,90,240,0.18)', color: '#7f5af0' }}>
+          <PartyPopper className="h-8 w-8 lg:h-10 lg:w-10" />
         </div>
       </div>
-      <h1 className="text-2xl lg:text-3xl font-bold gradient-text mb-2">Join the Party!</h1>
-      <p className="text-slate-300 text-sm lg:text-base">Create your account to participate in IIT Dharwad Freshers' 2025</p>
+      <h1 className="text-2xl lg:text-3xl font-semibold text-white">Create your Freshers Night profile</h1>
+      <p className="text-white/55 text-sm lg:text-base">Unlock voting, music curation, and exclusive announcements.</p>
     </div>
 
     <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-6">
       {error && (
-        <div className="bg-red-900/30 border border-red-500 text-red-100 px-4 py-3 rounded-lg text-sm lg:text-base">
+        <div className="rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm lg:text-base text-red-200">
           {error}
         </div>
       )}
@@ -127,11 +124,11 @@ const SignupForm = memo(({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
         {/* Full Name */}
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-2">
+          <label className="block text-sm font-medium text-white/70 mb-2">
             Full Name *
           </label>
           <div className="relative">
-            <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 lg:h-5 lg:w-5 text-slate-400" />
+            <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 lg:h-5 lg:w-5 text-white/30" />
             <input
               type="text"
               name="name"
@@ -146,11 +143,11 @@ const SignupForm = memo(({
 
         {/* Email */}
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-2">
-           Institute Email Address *
+          <label className="block text-sm font-medium text-white/70 mb-2">
+            Institute Email Address *
           </label>
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 lg:h-5 lg:w-5 text-slate-400" />
+            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 lg:h-5 lg:w-5 text-white/30" />
             <input
               type="email"
               name="email"
@@ -168,11 +165,11 @@ const SignupForm = memo(({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
         {/* Password */}
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-2">
+          <label className="block text-sm font-medium text-white/70 mb-2">
             Password *
           </label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 lg:h-5 lg:w-5 text-slate-400" />
+            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 lg:h-5 lg:w-5 text-white/30" />
             <input
               type={showPassword ? 'text' : 'password'}
               name="password"
@@ -185,7 +182,7 @@ const SignupForm = memo(({
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-200 transition-colors"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/40 hover:text-white transition-colors"
             >
               {showPassword ? <EyeOff className="h-4 w-4 lg:h-5 lg:w-5" /> : <Eye className="h-4 w-4 lg:h-5 lg:w-5" />}
             </button>
@@ -194,11 +191,11 @@ const SignupForm = memo(({
 
         {/* Confirm Password */}
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-2">
+          <label className="block text-sm font-medium text-white/70 mb-2">
             Confirm Password *
           </label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 lg:h-5 lg:w-5 text-slate-400" />
+            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 lg:h-5 lg:w-5 text-white/30" />
             <input
               type={showConfirmPassword ? 'text' : 'password'}
               name="confirmPassword"
@@ -211,7 +208,7 @@ const SignupForm = memo(({
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-200 transition-colors"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/40 hover:text-white transition-colors"
             >
               {showConfirmPassword ? <EyeOff className="h-4 w-4 lg:h-5 lg:w-5" /> : <Eye className="h-4 w-4 lg:h-5 lg:w-5" />}
             </button>
@@ -224,7 +221,7 @@ const SignupForm = memo(({
         <button
           type="submit"
           disabled={loading}
-          className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed py-3 lg:py-4 text-sm lg:text-base font-semibold transform transition-all hover:scale-[1.02]"
+          className="w-full btn-primary justify-center disabled:opacity-60 disabled:cursor-not-allowed py-3 lg:py-4 text-sm lg:text-base font-semibold"
         >
           {loading ? (
             <div className="flex items-center justify-center space-x-2">
@@ -243,18 +240,18 @@ const SignupForm = memo(({
 
     {/* Footer */}
     <div className="mt-6 lg:mt-8">
-      <div className="text-center border-t border-slate-700 pt-6">
-        <p className="text-slate-300 text-sm lg:text-base">
+      <div className="text-center border-t border-white/8 pt-6 space-y-3">
+        <p className="text-white/65 text-sm lg:text-base">
           Already have an account?{' '}
           <Link 
             to="/login" 
-            className="text-blue-400 hover:text-blue-300 font-semibold transition-colors hover:underline"
+            className="text-white font-semibold hover:underline underline-offset-4"
           >
             Login here
           </Link>
         </p>
-        <p className="text-slate-500 text-xs lg:text-sm mt-2">
-          By signing up, you agree to join the most epic freshers party ever! 🎉
+        <p className="text-white/45 text-xs lg:text-sm">
+          By signing up you’ll receive essential updates about Freshers Night 2025.
         </p>
       </div>
     </div>
@@ -396,13 +393,13 @@ const Signup = () => {
   }, []);
 
   return (
-    <div className="min-h-screen pt-16 sm:pt-20 lg:pt-24 flex items-start lg:items-center justify-center px-3 sm:px-4 py-6 sm:py-8">
+    <div className="px-4 sm:px-6 lg:px-8 pb-28">
       <Motion.div
         key={step} // This key will help prevent animation re-triggers when step changes
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="w-full max-w-sm sm:max-w-lg lg:max-w-2xl"
+        className="w-full max-w-sm sm:max-w-lg lg:max-w-2xl mx-auto mt-8"
       >
         <div className="card">
           {step === 'signup' ? (

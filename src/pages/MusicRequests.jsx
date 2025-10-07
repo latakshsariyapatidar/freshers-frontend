@@ -15,68 +15,55 @@ const MusicRequests = () => {
     songLink3: ''
   });
 
-  // Default song to fill empty slots (not shown to user)
   const DEFAULT_SONG = 'https://open.spotify.com/track/1rEVydQSe04NJUqyyEyeEq?si=77634cc57bcb4d89';
 
-  // Helper function to pad array to length 3 with default song
   const padArrayToThree = (arr) => {
-    const paddedArray = [...arr];
-    while (paddedArray.length < 3) {
-      paddedArray.push(DEFAULT_SONG);
+    const padded = [...arr];
+    while (padded.length < 3) {
+      padded.push(DEFAULT_SONG);
     }
-    return paddedArray;
+    return padded;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Clear previous messages
+
     setError('');
     setSuccess('');
     setSubmitting(true);
 
     try {
-      // Collect non-empty links
-      const links = [formData.songLink1, formData.songLink2, formData.songLink3]
-        .filter(link => link.trim() !== '');
-      
-      // Check if at least one link is provided
+      const links = [formData.songLink1, formData.songLink2, formData.songLink3].filter((link) => link.trim() !== '');
+
       if (links.length === 0) {
-        setError('Please provide at least one Spotify song link');
+        setError('Please provide at least one Spotify song link.');
         setSubmitting(false);
         return;
       }
 
-      // Validate Spotify links
       const spotifyRegex = /^https:\/\/open\.spotify\.com\/(track|album|playlist)\//;
       for (const link of links) {
         if (!spotifyRegex.test(link)) {
-          setError('Please enter valid Spotify links (must start with https://open.spotify.com/)');
+          setError('Please enter valid Spotify links (must start with https://open.spotify.com/).');
           setSubmitting(false);
           return;
         }
       }
 
-      // Always pad array to length 3 with default song for missing entries
-      // This ensures exactly 3 songs are always sent to the API
-      // Default song is not shown to the user but fills empty slots
       const paddedLinks = padArrayToThree(links);
-
-      const result = await submitSongSuggestions({
-        songLinks: paddedLinks
-      });
+      const result = await submitSongSuggestions({ songLinks: paddedLinks });
 
       if (result.success) {
-        setSuccess('Your request is submitted and will be reviewed by our DJ team. If you think this was a mistake, then let everyone enjoy the mistake😉');
+        setSuccess('Your songs are with the DJ. Watch for them on both nights—and if something sounds off, it might just be your song.');
         setFormData({ songLink1: '', songLink2: '', songLink3: '' });
         setShowForm(false);
         setHasSubmitted(true);
       } else {
-        setError(result.error || 'Failed to submit song suggestions');
+        setError(result.error || 'Failed to submit song suggestions.');
       }
-    } catch (error) {
-      console.error('Failed to submit request:', error);
-      setError('Failed to submit your song suggestions. Please try again.');
+    } catch (err) {
+      console.error('Failed to submit song suggestions:', err);
+      setError('We couldn\'t send your songs right now. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -90,163 +77,124 @@ const MusicRequests = () => {
   };
 
   return (
-    <div className="min-h-screen pt-20 lg:pt-24 px-4 py-8">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
+    <div className="px-4 sm:px-6 lg:px-8 pb-28">
+      <div className="max-w-3xl mx-auto pt-6 sm:pt-10 space-y-10">
         <Motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          transition={{ duration: 0.6 }}
+          className="text-center space-y-6"
         >
-          <div className="flex justify-center mb-6">
-            <Music className="h-16 w-16 text-purple-500 animate-pulse" />
+          <div className="flex justify-center">
+            <div
+              className="w-16 h-16 rounded-2xl flex items-center justify-center"
+              style={{ backgroundColor: 'rgba(127,90,240,0.18)', color: '#7f5af0' }}
+            >
+              <Music className="h-8 w-8" />
+            </div>
           </div>
-          <h1 className="text-2xl lg:text-4xl font-bold gradient-text mb-4 py-5">
-            Song Suggestions
-          </h1>
-          <p className="text-lg text-slate-300 max-w-2xl mx-auto">
-            Share your favorite Spotify songs for the party playlist! 
-            You can submit 1-3 songs - remember, you only get one chance!
+          <h1 className="text-3xl sm:text-4xl font-semibold text-white">Curate the Freshers soundtrack</h1>
+          <p className="text-base sm:text-lg text-white/60 max-w-2xl mx-auto">
+            Drop up to three Spotify links. The DJ booth reviews every submission and slips them into the set across both nights.
           </p>
-          <div className="mt-4 p-4 bg-blue-900/20 border border-blue-500/30 rounded-lg max-w-lg mx-auto">
-            <p className="text-sm text-blue-200">
-              <strong>How to get Spotify links:</strong><br />
-              1. Open Spotify app or web player<br />
-              2. Find your song → Click "..." → Share → Copy song link<br />
-              3. Paste the link below (should start with https://open.spotify.com/)
+          <div className="card text-left">
+            <p className="text-sm text-white/65 leading-relaxed">
+              <span className="font-semibold text-white">How to share your track:</span><br />
+              1. Open Spotify · find your song<br />
+              2. Tap <span className="font-mono text-white/80">••• → Share → Copy link</span><br />
+              3. Paste it below (links must start with <span className="font-mono">https://open.spotify.com/</span>)
             </p>
           </div>
         </Motion.div>
 
-        {/* Add Request Button - Only show if not submitted */}
         {!hasSubmitted && (
           <Motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="text-center mb-12"
+            transition={{ duration: 0.4, delay: 0.15 }}
+            className="text-center"
           >
-            <button
-              onClick={() => setShowForm(!showForm)}
-              className="btn-secondary inline-flex items-center space-x-2"
-            >
+            <button onClick={() => setShowForm(!showForm)} className="btn-secondary inline-flex items-center gap-2">
               <Plus className="h-5 w-5" />
-              <span>Add Song Suggestions</span>
+              <span>{showForm ? 'Hide form' : 'Add song suggestions'}</span>
             </button>
           </Motion.div>
         )}
 
-        {/* Success message after submission */}
         {hasSubmitted && success && (
           <Motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-12"
+            className="card text-center space-y-3"
           >
-            <div className="bg-green-500/20 border border-green-500/30 rounded-lg p-6 max-w-2xl mx-auto">
-              <div className="flex justify-center mb-4">
-                <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center">
-                  <Music className="h-8 w-8 text-green-400" />
-                </div>
+            <div className="flex justify-center">
+              <div className="w-14 h-14 rounded-full bg-emerald-500/15 text-emerald-300 flex items-center justify-center">
+                <Music className="h-7 w-7" />
               </div>
-              <p className="text-green-200 text-lg font-medium">{success}</p>
             </div>
+            <p className="text-white/75 text-sm sm:text-base leading-relaxed">{success}</p>
           </Motion.div>
         )}
 
-        {/* Request Form */}
         <AnimatePresence>
-          {showForm && (
+          {showForm && !hasSubmitted && (
             <Motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="mb-12"
+              transition={{ duration: 0.35 }}
             >
-              <div className="card">
-                <h2 className="text-xl font-bold text-slate-100 mb-6 flex items-center space-x-2">
-                  <Music className="h-6 w-6 text-purple-500" />
-                  <span>Submit Your Songs</span>
+              <div className="card space-y-5 text-left">
+                <h2 className="text-xl font-semibold text-white flex items-center gap-2">
+                  <Music className="h-5 w-5" />
+                  <span>Submit your songs</span>
                 </h2>
-                
-                {/* Error message */}
+
                 {error && (
-                  <div className="mb-4 p-4 bg-red-500/20 border border-red-500/30 rounded-lg">
-                    <p className="text-red-200 text-sm">{error}</p>
+                  <div className="rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3">
+                    <p className="text-sm text-red-200">{error}</p>
                   </div>
                 )}
-                
-                {/* Success message */}
-                {success && (
-                  <div className="mb-4 p-4 bg-green-500/20 border border-green-500/30 rounded-lg">
-                    <p className="text-green-200 text-sm">{success}</p>
-                  </div>
-                )}
-                
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                      Spotify Song Link #1
-                    </label>
-                    <input
-                      type="url"
-                      name="songLink1"
-                      value={formData.songLink1}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg focus:ring-2 focus:ring-purple-500/50 focus:border-transparent text-white placeholder-slate-400"
-                      placeholder="https://open.spotify.com/track/... (optional)"
-                    />
-                  </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                      Spotify Song Link #2 (Optional)
-                    </label>
-                    <input
-                      type="url"
-                      name="songLink2"
-                      value={formData.songLink2}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg focus:ring-2 focus:ring-purple-500/50 focus:border-transparent text-white placeholder-slate-400"
-                      placeholder="https://open.spotify.com/track/... (optional)"
-                    />
-                  </div>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  {[1, 2, 3].map((slot) => (
+                    <div key={slot} className="space-y-2">
+                      <label className="block text-sm font-medium text-white/70">
+                        Spotify song link #{slot}{slot === 1 ? '' : ' (optional)'}
+                      </label>
+                      <input
+                        type="url"
+                        name={`songLink${slot}`}
+                        value={formData[`songLink${slot}`]}
+                        onChange={handleChange}
+                        className="dark-input"
+                        placeholder="https://open.spotify.com/track/..."
+                      />
+                    </div>
+                  ))}
 
-                  <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                      Spotify Song Link #3 (Optional)
-                    </label>
-                    <input
-                      type="url"
-                      name="songLink3"
-                      value={formData.songLink3}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600/50 rounded-lg focus:ring-2 focus:ring-purple-500/50 focus:border-transparent text-white placeholder-slate-400"
-                      placeholder="https://open.spotify.com/track/... (optional)"
-                    />
-                  </div>
-
-                  <div className="flex space-x-4">
+                  <div className="flex flex-col sm:flex-row gap-3 pt-2">
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="flex-1 btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="btn-primary justify-center disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                       {submitting ? (
-                        <div className="flex items-center justify-center space-x-2">
+                        <div className="flex items-center gap-2">
                           <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                           <span>Submitting...</span>
                         </div>
                       ) : (
-                        <div className="flex items-center justify-center space-x-2">
+                        <div className="flex items-center gap-2">
                           <Send className="h-5 w-5" />
-                          <span>Submit Songs</span>
+                          <span>Submit songs</span>
                         </div>
                       )}
                     </button>
                     <button
                       type="button"
                       onClick={() => setShowForm(false)}
-                      className="px-6 py-3 border border-gray-300 text-gray-600 rounded-full font-semibold hover:bg-gray-50 transition-colors"
+                      className="btn-ghost justify-center text-sm"
                     >
                       Cancel
                     </button>

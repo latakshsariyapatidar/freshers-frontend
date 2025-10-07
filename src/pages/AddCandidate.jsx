@@ -5,7 +5,7 @@ import { createCandidate, getAllCandidates } from '../services/api';
 
 const AddCandidate = () => {
   const [name, setName] = useState('');
-  const [category, setCategory] = useState('Mr_Fresher');
+  const [category, setCategory] = useState('Mr');
   const [submitting, setSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState(null); // { type: 'success' | 'error', text: string }
@@ -52,7 +52,7 @@ const AddCandidate = () => {
       if (result.success) {
         setStatus({
           type: 'success',
-          text: `${name} has been added as a candidate for ${category.replace('_', ' ')}!`
+          text: `${name} has been added as a candidate for ${category}!`
         });
         setName('');
         // Reload candidates list
@@ -129,9 +129,9 @@ const AddCandidate = () => {
               <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
-                  onClick={() => setCategory('Mr_Fresher')}
+                  onClick={() => setCategory('Mr')}
                   className={`py-4 px-6 rounded-2xl border transition-all ${
-                    category === 'Mr_Fresher'
+                    category === 'Mr'
                       ? 'border-purple-500 bg-purple-500/20 text-white'
                       : 'border-white/10 bg-white/5 text-white/60 hover:border-white/20'
                   }`}
@@ -144,9 +144,9 @@ const AddCandidate = () => {
 
                 <button
                   type="button"
-                  onClick={() => setCategory('Miss_Fresher')}
+                  onClick={() => setCategory('Miss')}
                   className={`py-4 px-6 rounded-2xl border transition-all ${
-                    category === 'Miss_Fresher'
+                    category === 'Miss'
                       ? 'border-pink-500 bg-pink-500/20 text-white'
                       : 'border-white/10 bg-white/5 text-white/60 hover:border-white/20'
                   }`}

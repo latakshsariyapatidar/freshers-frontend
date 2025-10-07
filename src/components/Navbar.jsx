@@ -10,13 +10,14 @@ import {
   User,
   Calendar,
   LayoutDashboard,
+  Shield,
   Lock
 } from 'lucide-react';
 import { motion as Motion, AnimatePresence } from 'framer-motion';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { user, logout } = useAuth();
+  const { user, logout, isAdminUser } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -54,7 +55,8 @@ const Navbar = () => {
     { path: '/', icon: Home, label: 'Home', protected: false },
     { path: '/schedule', icon: Calendar, label: 'Schedule', protected: false },
     { path: '/music', icon: Music, label: 'Music', protected: true },
-    { path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', protected: true }
+    { path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', protected: true },
+    ...(user && isAdminUser ? [{ path: '/admin', icon: Shield, label: 'Admin', protected: true }] : [])
   ];
 
   const isActive = (path) => location.pathname === path;

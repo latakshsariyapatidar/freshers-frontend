@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import ApiTestPage from "./pages/ApiTestPage";
+import AdminPanel from "./pages/AdminPanel";
 // TODO: Temporarily hidden - will be enabled later
 // import Voting from './pages/Voting'
 import MusicRequests from "./pages/MusicRequests";
@@ -39,6 +40,14 @@ function App() {
                 }
               />
               <Route path="/api-test" element={<ApiTestPage />} />
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute requiresAdmin>
+                    <AdminPanel />
+                  </ProtectedRoute>
+                }
+              />
               {/* TODO: Temporarily hidden - will be enabled later */}
               {/* <Route path="/voting" element={
                 <ProtectedRoute>

@@ -6,7 +6,7 @@
  * user authentication, login/logout, and OTP verification.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { AuthContext } from './auth-context';
 import { 
   login as apiLogin, 
@@ -14,8 +14,7 @@ import {
   verifyOTP as apiVerifyOTP, 
   logout as apiLogout,
   isAuthenticated,
-  getCurrentUser,
-  isAdmin
+  getCurrentUser
 } from '../services/api';
 
 const AuthProvider = ({ children }) => {
@@ -23,33 +22,51 @@ const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const persistUser = useCallback((userData) => {
+    if (!userData) {
+      setUser(null);
+      localStorage.removeItem('userData');
+      return null;
+    }
+
+    const rawRole = userData.role ?? getCurrentUser()?.role;
+    const normalizedRole = typeof rawRole === 'string' ? rawRole.toLowerCase() : rawRole;
+    const resolvedUser = normalizedRole
+      ? { ...userData, role: normalizedRole }
+      : { ...userData };
+
+    localStorage.setItem('userData', JSON.stringify(resolvedUser));
+    setUser(resolvedUser);
+    return resolvedUser;
+  }, []);
+
   useEffect(() => {
     checkAuthStatus();
-  }, []);
+  }, [checkAuthStatus]);
 
   /**
    * Check current authentication status using the new API service
    */
-  const checkAuthStatus = async () => {
+  const checkAuthStatus = useCallback(async () => {
     try {
       const authenticated = isAuthenticated();
       const userData = getCurrentUser();
       
       if (authenticated && userData) {
-        setUser(userData);
+        persistUser(userData);
         setIsLoggedIn(true);
       } else {
-        setUser(null);
+        persistUser(null);
         setIsLoggedIn(false);
       }
     } catch (error) {
       console.error('Auth status check failed:', error);
-      setUser(null);
+      persistUser(null);
       setIsLoggedIn(false);
     } finally {
       setLoading(false);
     }
-  };
+  }, [persistUser]);
 
   /**
    * Handle user login using the new API service
@@ -63,7 +80,7 @@ const AuthProvider = ({ children }) => {
       const result = await apiLogin({ email, password });
       
       if (result.success) {
-        setUser(result.user);
+        persistUser(result.user || getCurrentUser());
         setIsLoggedIn(true);
         return { 
           success: true, 
@@ -123,7 +140,7 @@ const AuthProvider = ({ children }) => {
       const result = await apiVerifyOTP(otpData);
       
       if (result.success) {
-        setUser(result.user);
+        persistUser(result.user || getCurrentUser());
         setIsLoggedIn(true);
         return {
           success: true,
@@ -149,27 +166,39 @@ const AuthProvider = ({ children }) => {
    * Handle user logout using the new API service
    */
   const logout = () => {
-    apiLogout(); // This clears localStorage and redirects
-    setUser(null);
+    persistUser(null);
     setIsLoggedIn(false);
+    apiLogout(); // This clears localStorage and redirects
   };
 
   /**
    * Check if current user is admin
    * @returns {boolean} Admin status
    */
-  const userIsAdmin = () => {
-    return isAdmin();
-  };
+  const userIsAdmin = useCallback(() => {
+    const storedRole = (user?.role || getCurrentUser()?.role || '').toString().toLowerCase();
+    return storedRole === 'admin';
+  }, [user]);
 
   /**
    * Update user data in context
    * @param {Object} userData - Updated user data
    */
   const updateUser = (userData) => {
-    setUser(userData);
-    localStorage.setItem('userData', JSON.stringify(userData));
+    const updated = persistUser(userData);
+    setIsLoggedIn(!!updated);
+    return updated;
   };
+
+  const role = useMemo(() => {
+    if (user?.role) {
+      return user.role;
+    }
+    const storedUser = getCurrentUser();
+    return storedUser?.role || 'guest';
+  }, [user]);
+
+  const isAdminUser = useMemo(() => userIsAdmin(), [userIsAdmin]);
 
   // Context value with all auth functions and state
   const value = {
@@ -186,11 +215,13 @@ const AuthProvider = ({ children }) => {
     
     // Utility functions
     isAdmin: userIsAdmin,
+    isAdminUser,
     updateUser,
     checkAuthStatus,
     
     // Computed values
     isAuthenticated: isLoggedIn,
+    role,
     userName: user?.name || '',
     userEmail: user?.email || '',
     userId: user?._id || user?.id || null

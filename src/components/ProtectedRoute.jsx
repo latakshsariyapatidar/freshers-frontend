@@ -2,8 +2,8 @@ import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 
-const ProtectedRoute = ({ children }) => {
-  const { user, loading } = useAuth();
+const ProtectedRoute = ({ children, requiresAdmin = false }) => {
+  const { user, loading, isAdminUser } = useAuth();
   const location = useLocation();
 
   if (loading) {
@@ -16,6 +16,10 @@ const ProtectedRoute = ({ children }) => {
 
   if (!user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  if (requiresAdmin && !isAdminUser) {
+    return <Navigate to="/" replace />;
   }
 
   return children;

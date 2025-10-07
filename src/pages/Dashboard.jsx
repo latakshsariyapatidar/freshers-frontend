@@ -258,9 +258,9 @@ const Dashboard = () => {
                   <p className="text-xs text-white/45">Manage candidates, playlists, and submissions</p>
                 </div>
               </div>
-              <button className="btn-primary justify-center text-sm">
+              <Link to="/admin" className="btn-primary justify-center text-sm">
                 Open admin panel
-              </button>
+              </Link>
             </div>
           </section>
         )}

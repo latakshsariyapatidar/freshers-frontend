@@ -37,7 +37,7 @@ const Home = () => {
     {
       icon: Gift,
       title: 'Anonymous Messages',
-      description: 'Drop a whisper that only the admins can trace',
+      description: 'Drop a whisper...)',
       link: '/messages',
       accent: '#f7b731',
       protected: true

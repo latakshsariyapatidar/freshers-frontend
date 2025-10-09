@@ -3,6 +3,8 @@ import { getAllCandidates, castVote } from '../services/api';
 import { Trophy, Users, Heart, CheckCircle, AlertCircle } from 'lucide-react';
 import { motion as Motion } from 'framer-motion';
 
+const VOTING_STATUS_KEY = 'freshers_voting_status';
+
 const Voting = () => {
   const [participants, setParticipants] = useState({ male: [], female: [] });
   const [loading, setLoading] = useState(true);
@@ -12,11 +14,29 @@ const Voting = () => {
 
   useEffect(() => {
     fetchParticipants();
-    checkVotingStatus();
-    
-    // Socket connection disabled for now to avoid CORS issues
-    // Can be re-enabled once backend CORS is properly configured
+    loadVotingStatus();
   }, []);
+
+  const loadVotingStatus = () => {
+    try {
+      const savedStatus = localStorage.getItem(VOTING_STATUS_KEY);
+      if (savedStatus) {
+        const parsedStatus = JSON.parse(savedStatus);
+        setVotedFor(parsedStatus);
+      }
+    } catch (err) {
+      console.error('Failed to load voting status:', err);
+    }
+  };
+
+  const saveVotingStatus = (status) => {
+    try {
+      localStorage.setItem(VOTING_STATUS_KEY, JSON.stringify(status));
+      setVotedFor(status);
+    } catch (err) {
+      console.error('Failed to save voting status:', err);
+    }
+  };
 
   const fetchParticipants = async () => {
     try {
@@ -57,32 +77,37 @@ const Voting = () => {
     }
   };
 
-  const checkVotingStatus = async () => {
-    try {
-      // Note: This endpoint might not exist on backend yet
-      // For now, we'll assume user hasn't voted
-      setVotedFor({ male: null, female: null });
-    } catch (err) {
-      console.log('Could not check voting status:', err);
-      // Continue without voting status
-    }
-  };
-
   const handleVote = async (participantId, category) => {
-    if (votedFor[category] || isVoting) return;
+    // Determine frontend category from backend category
+    const frontendCategory = (category === 'Mr' || category === 'Mr_Fresher') ? 'male' : 'female';
+    
+    if (votedFor[frontendCategory] || isVoting) {
+      return;
+    }
 
     setIsVoting(true);
+    setError('');
+    
     try {
       // Use the new castVote API function
       const result = await castVote(participantId);
       
       if (result.success) {
-        // Map backend categories to frontend categories
-        const frontendCategory = (category === 'Mr' || category === 'Mr_Fresher') ? 'male' : 'female';
-        setVotedFor({ ...votedFor, [frontendCategory]: participantId });
-        await fetchParticipants(); // Refresh to get updated vote counts
+        // Update voting status and save to localStorage
+        const newVotingStatus = { ...votedFor, [frontendCategory]: participantId };
+        saveVotingStatus(newVotingStatus);
+        
+        // Refresh to get updated vote counts
+        await fetchParticipants();
       } else {
-        setError(result.error || 'Failed to vote. Please try again.');
+        // Show error message
+        setError(result.error || 'Failed to vote. You may have already voted for this category.');
+        
+        // If error indicates already voted, mark as voted in localStorage
+        if (result.error && result.error.toLowerCase().includes('already voted')) {
+          const newVotingStatus = { ...votedFor, [frontendCategory]: participantId };
+          saveVotingStatus(newVotingStatus);
+        }
       }
     } catch (err) {
       console.error('Voting failed:', err);

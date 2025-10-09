@@ -57,18 +57,6 @@ const Dashboard = () => {
 
   const metricCards = [
     {
-      label: 'Mr. Fresher candidates',
-      value: stats.mrFresherCandidates,
-      icon: Trophy,
-      accent: '#7f5af0'
-    },
-    {
-      label: 'Miss Fresher candidates',
-      value: stats.missFresherCandidates,
-      icon: Trophy,
-      accent: '#a08afa'
-    },
-    {
       label: 'Your song submissions',
       value: stats.mySongs,
       icon: Music,

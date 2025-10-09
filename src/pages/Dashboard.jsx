@@ -216,15 +216,15 @@ const Dashboard = () => {
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-white">Cast your vote</h3>
-                <p className="text-xs text-white/45">Opens when the event goes live</p>
+                <p className="text-xs text-white/45">Voting is now open</p>
               </div>
             </div>
             <p className="text-sm text-white/65">
-              When the curtain lifts on Night Two, place your votes for Mr & Ms Freshie. Results update in real time here.
+              Place your votes for Mr & Ms Freshie. Results update in real time.
             </p>
-            <button className="btn-secondary justify-center text-sm" disabled>
-              Voting opens Oct 11
-            </button>
+            <Link to="/voting" className="btn-secondary justify-center text-sm">
+              Cast my vote
+            </Link>
           </div>
 
           <div className="card flex flex-col gap-4">

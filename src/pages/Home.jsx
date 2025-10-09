@@ -20,11 +20,9 @@ const Home = () => {
       icon: Vote,
       title: 'Mr & Ms Freshie',
       description: 'Cast your votes when the spotlight goes live',
-      link: '',
+      link: '/voting',
       accent: '#2cb67d',
-      protected: true,
-      comingSoon: true,
-      comingSoonText: 'Voting unlocks on Oct 11, 7 PM'
+      protected: true
     },
     {
       icon: Music,
@@ -32,6 +30,14 @@ const Home = () => {
       description: 'Drop up to three Spotify tracks for the DJ',
       link: '/music',
       accent: '#f25f4c',
+      protected: true
+    },
+    {
+      icon: Gift,
+      title: 'Anonymous Messages',
+      description: 'Drop a whisper that only the admins can trace',
+      link: '/messages',
+      accent: '#f7b731',
       protected: true
     }
   ];

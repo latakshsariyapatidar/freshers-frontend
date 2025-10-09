@@ -12,6 +12,7 @@ import MusicRequests from "./pages/MusicRequests";
 import AnonymousMessages from "./pages/AnonymousMessages";
 import AdminAnonymousMessages from "./pages/AdminAnonymousMessages";
 import AddCandidate from "./pages/AddCandidate";
+import Voting from "./pages/Voting";
 import Schedule from "./pages/Schedule";
 import ProtectedRoute from "./components/ProtectedRoute";
 // Import debug test for signup
@@ -63,12 +64,14 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              {/* TODO: Temporarily hidden - will be enabled later */}
-              {/* <Route path="/voting" element={
-                <ProtectedRoute>
-                  <Voting />
-                </ProtectedRoute>
-              } /> */}
+              <Route
+                path="/voting"
+                element={
+                  <ProtectedRoute>
+                    <Voting />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path="/music"
                 element={
@@ -77,14 +80,14 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              {/* <Route
+              <Route
                 path="/messages"
                 element={
                   <ProtectedRoute>
                     <AnonymousMessages />
                   </ProtectedRoute>
                 }
-              /> */}
+              />
               <Route path="/schedule" element={<Schedule />} />
             </Routes>
           </main>

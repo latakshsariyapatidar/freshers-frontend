@@ -126,42 +126,7 @@ const AnonymousMessages = () => {
           </Motion.button>
         </Motion.form>
 
-        <Motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="grid gap-4 md:grid-cols-3"
-        >
-          <div className="surface-soft border border-white/5 rounded-2xl p-4 flex flex-col gap-3 text-sm text-white/70">
-            <div className="w-10 h-10 rounded-full bg-white/10 text-pink-300 flex items-center justify-center">
-              <Sparkles size={18} />
-            </div>
-            <div>
-              <p className="font-semibold text-white">✨ Sweet only</p>
-              <p>Keep it uplifting. We nuke spam, slander, and chaos instantly.</p>
-            </div>
-          </div>
 
-          <div className="surface-soft border border-white/5 rounded-2xl p-4 flex flex-col gap-3 text-sm text-white/70">
-            <div className="w-10 h-10 rounded-full bg-white/10 text-purple-300 flex items-center justify-center">
-              <Lock size={18} />
-            </div>
-            <div>
-              <p className="font-semibold text-white">🔒 No breadcrumbs</p>
-              <p>We just store the words. No names, no timestamps on the public side.</p>
-            </div>
-          </div>
-
-          <div className="surface-soft border border-white/5 rounded-2xl p-4 flex flex-col gap-3 text-sm text-white/70">
-            <div className="w-10 h-10 rounded-full bg-white/10 text-indigo-300 flex items-center justify-center">
-              <Shield size={18} />
-            </div>
-            <div>
-              <p className="font-semibold text-white">🛡️ Freshers lounge fact</p>
-              <p>If someone figures it out, it’s because they literally saw you typing.</p>
-            </div>
-          </div>
-        </Motion.div>
       </div>
     </div>
   );

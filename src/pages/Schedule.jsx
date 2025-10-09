@@ -1,6 +1,5 @@
 import React from 'react';
 import { 
-  Clock, 
   Coffee, 
   Utensils, 
   MapPin, 
@@ -26,8 +25,7 @@ const Schedule = () => {
     // October 10th Events
     {
       day: 'October 10th',
-      time: '8:00 PM',
-      endTime: '11:00 PM',
+
       category: 'Opening Night',
       title: 'Dance by Mayank',
       description: 'Opening performance to kick off the celebrations',
@@ -37,7 +35,7 @@ const Schedule = () => {
     },
     {
       day: 'October 10th',
-      time: '8:15 PM',
+      
       category: 'Musical Performance',
       title: 'Duet by L.Shreya and Pritika',
       description: 'Beautiful duet performance',
@@ -47,7 +45,6 @@ const Schedule = () => {
     },
     {
       day: 'October 10th',
-      time: '8:30 PM',
       category: 'Dance Competition',
       title: 'Street Dance (King of Dance)',
       description: 'Street dance competition to find the ultimate dancer',
@@ -57,7 +54,6 @@ const Schedule = () => {
     },
     {
       day: 'October 10th',
-      time: '9:00 PM',
       category: 'Strength Challenge',
       title: 'Planck Holding Challenge',
       description: 'Strong man champion - test your endurance!',
@@ -67,7 +63,6 @@ const Schedule = () => {
     },
     {
       day: 'October 10th',
-      time: '9:30 PM',
       category: 'Rap Competition',
       title: 'Rap Battle (Rapper in the Town)',
       description: 'Battle it out with your best rap skills',
@@ -77,7 +72,6 @@ const Schedule = () => {
     },
     {
       day: 'October 10th',
-      time: '10:00 PM',
       category: 'Fun Contest',
       title: 'Pick Up Lines Contest',
       description: 'Playboy / Playgirl contest - show your charm!',
@@ -87,17 +81,6 @@ const Schedule = () => {
     },
     {
       day: 'October 10th',
-      time: '10:20 PM',
-      category: 'Open Stage',
-      title: 'Shayari by Khushi',
-      description: 'A beautiful collection of Shayari by Khushi',
-      icon: Spotlight,
-      color: '#06b6d4', // cyan-500
-      bgColor: 'rgba(6, 182, 212, 0.1)'
-    },
-    {
-      day: 'October 10th',
-      time: '10:30 PM',
       category: 'Open Stage',
       title: 'Open Mic Invites',
       description: 'Special badges for spontaneous talented performers',
@@ -109,8 +92,6 @@ const Schedule = () => {
     // October 11th Morning
     {
       day: 'October 11th',
-      time: '9:00 AM',
-      endTime: '12:00 PM',
       category: 'Adventure',
       title: 'Treasure Hunt Event',
       description: 'After breakfast - Winners awarded with incentives',
@@ -122,8 +103,6 @@ const Schedule = () => {
     // October 11th Afternoon F600
     {
       day: 'October 11th',
-      time: '2:00 PM',
-      endTime: '3:00 PM',
       category: 'Performances',
       title: 'Dance Performances Block 1',
       description: 'Dance by Mayank & crew, Antish & crew, Drama by Harshit & crew, Suchi & crew, Juniors',
@@ -133,8 +112,6 @@ const Schedule = () => {
     },
     {
       day: 'October 11th',
-      time: '3:00 PM',
-      endTime: '3:15 PM',
       category: 'Introduction',
       title: 'Introduction of Judges',
       description: 'Meet the panel of judges for the day',
@@ -144,8 +121,6 @@ const Schedule = () => {
     },
     {
       day: 'October 11th',
-      time: '3:15 PM',
-      endTime: '4:00 PM',
       category: 'Interactive',
       title: 'Spotlight Events and Dares',
       description: 'Confident performers will have an advantage',
@@ -155,8 +130,6 @@ const Schedule = () => {
     },
     {
       day: 'October 11th',
-      time: '4:00 PM',
-      endTime: '5:00 PM',
       category: 'Performances',
       title: 'Dance Performances Block 2',
       description: 'Kishore & crew, Dance Drama by Anant & crew, Juniors, Apratim & crew, Surya & crew',
@@ -166,8 +139,6 @@ const Schedule = () => {
     },
     {
       day: 'October 11th',
-      time: '5:00 PM',
-      endTime: '6:00 PM',
       category: 'Main Competition',
       title: 'Mr and Miss Freshie Live Decision',
       description: 'The ultimate competition with live events and decision',
@@ -177,8 +148,6 @@ const Schedule = () => {
     },
     {
       day: 'October 11th',
-      time: '6:00 PM',
-      endTime: '6:30 PM',
       category: 'Photography',
       title: 'Branch Wise Photograph & Return Gifts',
       description: 'Group photos and distribution of return gifts with refreshments',
@@ -190,8 +159,6 @@ const Schedule = () => {
     // October 11th Evening
     {
       day: 'October 11th',
-      time: '8:15 PM',
-      endTime: '8:30 PM',
       category: 'Concert',
       title: 'Concert by Rhapsody',
       description: 'Live musical concert performance',
@@ -201,8 +168,6 @@ const Schedule = () => {
     },
     {
       day: 'October 11th',
-      time: '8:30 PM',
-      endTime: '11:00 PM',
       category: 'Grand Finale',
       title: 'DJ Night Concluded',
       description: 'End the celebrations with an epic DJ night',
@@ -216,7 +181,6 @@ const Schedule = () => {
     'October 10th': {
       title: 'OCTOBER 10TH',
       subtitle: 'Opening Night Events',
-      time: '8:00 PM - 11:00 PM',
       color: '#ec4899',
       bgColor: 'rgba(236, 72, 153, 0.1)',
       icon: PartyPopper
@@ -224,7 +188,6 @@ const Schedule = () => {
     'October 11th': {
       title: 'OCTOBER 11TH',
       subtitle: 'Main Event Day',
-      time: '9:00 AM - 11:00 PM',
       color: '#eab308',
       bgColor: 'rgba(234, 179, 8, 0.1)',
       icon: Trophy
@@ -295,7 +258,6 @@ const Schedule = () => {
             
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2 text-xs text-slate-400">
-                <Clock className="h-3 w-3" />
                 <span>
                   {event.time}
                   {event.endTime && ` - ${event.endTime}`}
@@ -348,7 +310,6 @@ const Schedule = () => {
               {categoryInfo.subtitle}
             </p>
             <div className="flex items-center space-x-2 text-xs sm:text-sm text-slate-400 mt-2">
-              <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
               <span>{categoryInfo.time}</span>
             </div>
           </div>
@@ -378,14 +339,12 @@ const Schedule = () => {
           </p>
           <div className="grid sm:grid-cols-2 gap-4 mt-8 max-w-2xl mx-auto text-left">
             <div className="surface-soft border border-slate-800 rounded-xl px-4 py-3 flex items-center gap-3">
-              <Clock className="h-4 w-4 text-pink-400" />
               <div>
                 <p className="text-xs text-slate-400 uppercase tracking-[0.2em]">DAY ONE</p>
                 <p className="text-sm text-slate-200">October 10 · 8:00 PM – 11:00 PM</p>
               </div>
             </div>
             <div className="surface-soft border border-slate-800 rounded-xl px-4 py-3 flex items-center gap-3">
-              <Clock className="h-4 w-4 text-amber-400" />
               <div>
                 <p className="text-xs text-slate-400 uppercase tracking-[0.2em]">DAY TWO</p>
                 <p className="text-sm text-slate-200">October 11 · 9:00 AM – 11:00 PM</p>

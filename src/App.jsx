@@ -64,15 +64,14 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              {/* TODO: Temporarily hidden - will be enabled later */}
-              {/* <Route
+              <Route
                 path="/voting"
                 element={
                   <ProtectedRoute>
                     <Voting />
                   </ProtectedRoute>
                 }
-              /> */}
+              />
               <Route
                 path="/music"
                 element={
@@ -81,14 +80,14 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              {/* <Route
+              <Route
                 path="/messages"
                 element={
                   <ProtectedRoute>
                     <AnonymousMessages />
                   </ProtectedRoute>
                 }
-              /> */}
+              />
               <Route path="/schedule" element={<Schedule />} />
             </Routes>
           </main>

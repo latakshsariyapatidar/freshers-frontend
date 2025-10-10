@@ -262,7 +262,7 @@ const Schedule = () => {
         >
           <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-slate-800 bg-slate-900/60 text-slate-300 text-xs sm:text-sm uppercase tracking-[0.3em]">
             <Calendar className="h-4 w-4 text-pink-400" />
-            <span>October 10 – 11, 2025</span>
+            <span>October 11, 2025</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mt-6">
             Freshers Night 2025 Schedule
@@ -270,12 +270,8 @@ const Schedule = () => {
           <p className="text-slate-400 text-base sm:text-lg mt-3 max-w-2xl mx-auto">
             A streamlined timeline covering every performance, competition, and celebration across both days.
           </p>
-          <div className="grid sm:grid-cols-2 gap-4 mt-8 max-w-2xl mx-auto text-left">
+          <div className="grid sm:grid-cols-1 gap-4 mt-8 max-w-2xl mx-auto text-left">
             <div className="surface-soft border border-slate-800 rounded-xl px-4 py-3 flex items-center gap-3">
-              <div>
-                <p className="text-xs text-slate-400 uppercase tracking-[0.2em]">DAY ONE</p>
-                <p className="text-sm text-slate-200">October 10 · 8:00 PM – 11:00 PM</p>
-              </div>
             </div>
             <div className="surface-soft border border-slate-800 rounded-xl px-4 py-3 flex items-center gap-3">
               <div>

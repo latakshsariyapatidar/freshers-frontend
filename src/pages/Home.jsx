@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { PartyPopper, Vote, Music, Calendar, MapPin, Gift } from 'lucide-react';
+import { PartyPopper, Vote, Music, Calendar, MapPin, Gift, MessageCircle } from 'lucide-react';
 import { motion as Motion } from 'framer-motion';
 
 const Home = () => {
@@ -32,6 +32,14 @@ const Home = () => {
       description: 'Drop up to three Spotify tracks for the DJ',
       link: '/music',
       accent: '#f25f4c',
+      protected: true
+    },
+    {
+      icon: MessageCircle,
+      title: 'Anonymous Whispers',
+      description: 'Send secret compliments and shoutouts',
+      link: '/messages',
+      accent: '#ff6b6b',
       protected: true
     }
   ];
